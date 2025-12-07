@@ -46,7 +46,7 @@
     </div>
     {% else %}
     <div class="relative h-screen max-h-[800px] overflow-hidden">
-        <img src="https://images.unsplash.com/photo-1590736969955-71cc94901144?w=1600&q=80" alt="Leather texture" class="absolute inset-0 w-full h-full object-cover">
+        <img src="https://placehold.co/600x400" alt="Leather texture" class="absolute inset-0 w-full h-full object-cover">
         <div class="absolute inset-0 bg-black bg-opacity-40"></div>
         <div class="relative h-full flex items-center">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
@@ -128,7 +128,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="group">
                 <a href="{{ url_for('main.product_detail', slug=product.slug) }}">
                     <div class="relative overflow-hidden bg-gray-100 mb-4 aspect-square">
-                        <img src="{% if product.image_file %}{{ url_for('static', filename='uploads/' + product.image_file) }}{% else %}{{ product.image_url or 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&q=80' }}{% endif %}" alt="{{ product.name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <img src="{% if product.image_file %}{{ url_for('static', filename='uploads/' + product.image_file) }}{% else %}{{ product.image_url or 'https://placehold.co/600x400' }}{% endif %}" alt="{{ product.name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                     </div>
                     <h3 class="text-xl font-bold text-leather-dark mb-2">{{ product.name }}</h3>
                     <p class="text-gray-600 mb-3">{{ product.short_description or product.description[:100] }}</p>
