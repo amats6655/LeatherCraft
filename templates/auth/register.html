@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Регистрация{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-leather-cream py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8">
+        <div>
+            <h2 class="mt-6 text-center text-3xl font-extrabold text-leather-dark">Регистрация</h2>
+        </div>
+        <form class="mt-8 space-y-6 bg-white p-8 rounded-sm shadow-sm" method="POST">
+            <div class="space-y-4">
+                <div>
+                    <label for="username" class="block text-sm font-medium text-gray-700">Имя пользователя *</label>
+                    <input id="username" name="username" type="text" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-sm shadow-sm focus:outline-none focus:ring-leather-dark focus:border-leather-dark">
+                </div>
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email *</label>
+                    <input id="email" name="email" type="email" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-sm shadow-sm focus:outline-none focus:ring-leather-dark focus:border-leather-dark">
+                </div>
+                <div>
+                    <label for="full_name" class="block text-sm font-medium text-gray-700">Полное имя</label>
+                    <input id="full_name" name="full_name" type="text" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-sm shadow-sm focus:outline-none focus:ring-leather-dark focus:border-leather-dark">
+                </div>
+                <div>
+                    <label for="phone" class="block text-sm font-medium text-gray-700">Телефон</label>
+                    <input id="phone" name="phone" type="tel" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-sm shadow-sm focus:outline-none focus:ring-leather-dark focus:border-leather-dark">
+                </div>
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700">Пароль *</label>
+                    <input id="password" name="password" type="password" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-sm shadow-sm focus:outline-none focus:ring-leather-dark focus:border-leather-dark">
+                </div>
+                <div>
+                    <label for="password_confirm" class="block text-sm font-medium text-gray-700">Подтверждение пароля *</label>
+                    <input id="password_confirm" name="password_confirm" type="password" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-sm shadow-sm focus:outline-none focus:ring-leather-dark focus:border-leather-dark">
+                </div>
+            </div>
+            <div>
+                    <button type="submit" class="btn btn-primary w-full">
+                        Зарегистрироваться
+                    </button>
+            </div>
+            <div class="text-center">
+                <p class="text-sm text-gray-600">
+                    Уже есть аккаунт? <a href="{{ url_for('auth.login') }}" class="font-medium text-leather-dark hover:text-leather-medium">Войти</a>
+                </p>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Вход{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-leather-cream py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8">
+        <div>
+            <h2 class="mt-6 text-center text-3xl font-extrabold text-leather-dark">Вход в систему</h2>
+        </div>
+        <form class="mt-8 space-y-6 bg-white p-8 rounded-sm shadow-sm" method="POST">
+            <div class="space-y-4">
+                <div>
+                    <label for="username" class="block text-sm font-medium text-gray-700">Имя пользователя</label>
+                    <input id="username" name="username" type="text" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-sm shadow-sm focus:outline-none focus:ring-leather-dark focus:border-leather-dark">
+                </div>
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700">Пароль</label>
+                    <input id="password" name="password" type="password" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-sm shadow-sm focus:outline-none focus:ring-leather-dark focus:border-leather-dark">
+                </div>
+                <div class="flex items-center">
+                    <input id="remember" name="remember" type="checkbox" class="h-4 w-4 text-leather-dark focus:ring-leather-dark border-gray-300 rounded">
+                    <label for="remember" class="ml-2 block text-sm text-gray-900">Запомнить меня</label>
+                </div>
+            </div>
+            <div>
+                <button type="submit" class="btn btn-primary w-full">
+                    Войти
+                </button>
+            </div>
+            <div class="text-center">
+                <p class="text-sm text-gray-600">
+                    Нет аккаунта? <a href="{{ url_for('auth.register') }}" class="font-medium text-leather-dark hover:text-leather-medium">Зарегистрироваться</a>
+                </p>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+

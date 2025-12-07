@@ -157,6 +157,7 @@ class Content(db.Model):
     key = db.Column(db.String(100), unique=True, nullable=False, index=True)
     title = db.Column(db.String(200))
     content = db.Column(db.Text)
+    content_type = db.Column(db.String(50))
     section = db.Column(db.String(50))
     created_at = db.Column(db.DateTime, default=datetime.now(timezone.utc))
     updated_at = db.Column(db.DateTime, default=datetime.now(timezone.utc), onupdate=datetime.now(timezone.utc))

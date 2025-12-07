@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}Каталог{% endblock %}
+
+{% block content %}
+<section class="py-16 sm:py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-leather-dark mb-4">Каталог продукции</h2>
+            <p class="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto">Широкий ассортимент изделий из натуральной кожи</p>
+        </div>
+
+        <div class="mb-8">
+            <form method="GET" class="flex flex-wrap gap-4 items-center">
+                <div class="flex-1 min-w-[200px]">
+                    <input type="text" name="search" value="{{ search_query }}" placeholder="Поиск товаров..." class="w-full px-4 py-2 border border-gray-300 rounded-sm focus:outline-none focus:border-leather-dark">
+                </div>
+                <div class="flex gap-3 flex-wrap">
+                    <a href="{{ url_for('main.catalog') }}" class="btn {% if not current_category %}btn-primary{% else %}btn-secondary{% endif %} px-6 py-2">
+                        Все
+                    </a>
+                    {% for category in categories %}
+                    <a href="{{ url_for('main.catalog', category=category.slug) }}" class="btn {% if current_category == category.slug %}btn-primary{% else %}btn-secondary{% endif %} px-6 py-2">
+                        {{ category.name }}
+                    </a>
+                    {% endfor %}
+                </div>
+            </form>
+        </div>
+
+        {% if products %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for product in products %}
+            <div class="group">
+                <a href="{{ url_for('main.product_detail', slug=product.slug) }}">
+                    <div class="relative overflow-hidden bg-gray-100 mb-4 aspect-square">
+                        <img src="{% if product.image_file %}{{ url_for('static', filename='uploads/' + product.image_file) }}{% else %}{{ product.image_url or 'https://placehold.co/600x400' }}{% endif %}" alt="{{ product.name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    </div>
+                    <h3 class="text-xl font-bold text-leather-dark mb-2">{{ product.name }}</h3>
+                    <p class="text-gray-600 mb-3">{{ product.short_description or product.description[:100] if product.description else '' }}</p>
+                    <p class="text-2xl font-bold text-leather-dark">{{ product.price }} ₽</p>
+                    {% if product.stock_quantity > 0 %}
+                    <p class="text-sm text-green-600 mt-2">В наличии: {{ product.stock_quantity }} шт.</p>
+                    {% else %}
+                    <p class="text-sm text-red-600 mt-2">Нет в наличии</p>
+                    {% endif %}
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if pagination.pages > 1 %}
+        <div class="mt-12 flex justify-center">
+            <div class="flex gap-2">
+                {% if pagination.has_prev %}
+                <a href="{{ url_for('main.catalog', page=pagination.prev_num, category=current_category, search=search_query) }}" class="btn btn-primary px-4 py-2">Назад</a>
+                {% endif %}
+                {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                    {% if page_num %}
+                        {% if page_num == pagination.page %}
+                        <span class="btn btn-primary px-4 py-2 opacity-75 cursor-default">{{ page_num }}</span>
+                        {% else %}
+                        <a href="{{ url_for('main.catalog', page=page_num, category=current_category, search=search_query) }}" class="btn btn-secondary px-4 py-2">{{ page_num }}</a>
+                        {% endif %}
+                    {% else %}
+                    <span class="px-4 py-2">...</span>
+                    {% endif %}
+                {% endfor %}
+                {% if pagination.has_next %}
+                <a href="{{ url_for('main.catalog', page=pagination.next_num, category=current_category, search=search_query) }}" class="btn btn-primary px-4 py-2">Вперед</a>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+        {% else %}
+        <div class="text-center py-12">
+            <p class="text-xl text-gray-600">Товары не найдены</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
