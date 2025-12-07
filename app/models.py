@@ -83,6 +83,7 @@ class Product(db.Model):
     image_url = db.Column(db.String(500))  # Ссылка на изображение
     image_file = db.Column(db.String(500))  # Путь к загруженному файлу
     is_active = db.Column(db.Boolean, default=True)
+    views_count = db.Column(db.Integer, default=0)
     category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now(timezone.utc))
     updated_at = db.Column(db.DateTime, default=datetime.now(timezone.utc), onupdate=datetime.now(timezone.utc))
