@@ -1,131 +1,176 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}LeatherCraft — Премиум кожаные изделия{% endblock %}</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        leather: {
-                            dark: '#3E2723',
-                            medium: '#6D4C41',
-                            light: '#A1887F',
-                            cream: '#EFEBE9',
-                            beige: '#D7CCC8'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    {% block extra_head %}{% endblock %}
-</head>
-<body class="font-sans text-gray-900 bg-white">
-    <nav class="fixed top-0 left-0 right-0 bg-white shadow-sm z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-20">
-                <div class="flex items-center">
-                    <a href="{{ url_for('main.index') }}" class="text-2xl sm:text-3xl font-bold text-leather-dark tracking-tight">LeatherCraft</a>
-                </div>
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="{{ url_for('main.index') }}" class="text-gray-700 hover:text-leather-dark transition-colors">Главная</a>
-                    <a href="{{ url_for('main.catalog') }}" class="text-gray-700 hover:text-leather-dark transition-colors">Каталог</a>
-                    <a href="{{ url_for('main.about') }}" class="text-gray-700 hover:text-leather-dark transition-colors">О компании</a>
-                    <a href="{{ url_for('main.blog') }}" class="text-gray-700 hover:text-leather-dark transition-colors">Блог</a>
-                    <a href="{{ url_for('main.contact') }}" class="text-gray-700 hover:text-leather-dark transition-colors">Контакты</a>
-                    {% if current_user.is_authenticated %}
-                        <a href="{{ url_for('user.cart') }}" class="text-gray-700 hover:text-leather-dark transition-colors">
-                            <i class="fas fa-shopping-cart"></i> Корзина
-                        </a>
-                        <div class="relative group">
-                            <button class="text-gray-700 hover:text-leather-dark transition-colors">
-                                <i class="fas fa-user"></i> {{ current_user.username }}
-                            </button>
-                            <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
-                                <a href="{{ url_for('user.profile') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream">Профиль</a>
-                                <a href="{{ url_for('user.orders') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream">Мои заказы</a>
-                                {% if current_user.is_admin() %}
-                                    <a href="{{ url_for('admin.dashboard') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream">Админ-панель</a>
-                                {% elif current_user.is_manager() %}
-                                    <a href="{{ url_for('manager.dashboard') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream">Панель менеджера</a>
+{% extends "base.html" %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<section id="hero" class="relative">
+    {% if hero_slides %}
+    <div class="swiper hero-swiper">
+        <div class="swiper-wrapper">
+            {% for slide in hero_slides %}
+            <div class="swiper-slide">
+                <div class="relative h-screen max-h-[800px] overflow-hidden">
+                    <img src="{% if slide.image_file %}{{ url_for('static', filename='uploads/' + slide.image_file) }}{% else %}{{ slide.image_url or '' }}{% endif %}" alt="{{ slide.title }}" class="absolute inset-0 w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-black bg-opacity-40"></div>
+                    <div class="relative h-full flex items-center">
+                        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+                            <div class="max-w-3xl">
+                                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+                                    {{ slide.title }}
+                                </h1>
+                                {% if slide.subtitle %}
+                                <p class="text-xl sm:text-2xl text-white mb-8 leading-relaxed">
+                                    {{ slide.subtitle }}
+                                </p>
                                 {% endif %}
-                                <a href="{{ url_for('auth.logout') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream">Выход</a>
+                                {% if slide.link_url %}
+                                <div class="flex flex-col sm:flex-row gap-4">
+                                    <a href="{{ slide.link_url }}" class="btn btn-secondary px-8 py-4 text-center text-lg">
+                                        {{ slide.link_text or 'Подробнее' }}
+                                    </a>
+                                </div>
+                                {% endif %}
                             </div>
                         </div>
-                    {% else %}
-                        <a href="{{ url_for('auth.login') }}" class="text-gray-700 hover:text-leather-dark transition-colors">Вход</a>
-                        <a href="{{ url_for('auth.register') }}" class="bg-leather-dark text-white px-6 py-2.5 rounded-sm hover:bg-leather-medium transition-colors">Регистрация</a>
-                    {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="swiper-pagination"></div>
+        <div class="swiper-button-prev hidden md:flex"></div>
+        <div class="swiper-button-next hidden md:flex"></div>
+    </div>
+    {% else %}
+    <div class="relative h-screen max-h-[800px] overflow-hidden">
+        <img src="https://images.unsplash.com/photo-1590736969955-71cc94901144?w=1600&q=80" alt="Leather texture" class="absolute inset-0 w-full h-full object-cover">
+        <div class="absolute inset-0 bg-black bg-opacity-40"></div>
+        <div class="relative h-full flex items-center">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+                <div class="max-w-3xl">
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+                        Премиум кожаные изделия ручной работы
+                    </h1>
+                    <p class="text-xl sm:text-2xl text-white mb-8 leading-relaxed">
+                        Традиции мастерства с 1985 года. Натуральная кожа высшего качества для вашего бизнеса.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="{{ url_for('main.catalog') }}" class="btn btn-secondary px-8 py-4 text-center text-lg">Смотреть каталог</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </nav>
+    </div>
+    {% endif %}
+</section>
 
-    <main class="pt-20">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
-                    {% for category, message in messages %}
-                        <div class="mb-4 p-4 rounded {% if category == 'error' %}bg-red-100 text-red-700{% elif category == 'success' %}bg-green-100 text-green-700{% else %}bg-blue-100 text-blue-700{% endif %}">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-        {% endwith %}
+{% if hero_slides %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const swiper = new Swiper('.hero-swiper', {
+        loop: true,
+        autoplay: {
+            delay: 5000,
+            disableOnInteraction: false,
+        },
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+    });
+});
+</script>
+{% endif %}
 
-        {% block content %}{% endblock %}
-    </main>
-
-    <footer class="bg-leather-dark text-white py-12 mt-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-                <div>
-                    <div class="text-2xl font-bold mb-4">LeatherCraft</div>
-                    <p class="text-leather-beige">Премиум кожаные изделия ручной работы с 1985 года</p>
+<section class="py-16 sm:py-20 bg-leather-cream">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
+            <div class="text-center">
+                <div class="w-16 h-16 bg-leather-dark rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-certificate text-white text-2xl"></i>
                 </div>
-                <div>
-                    <div class="font-bold text-lg mb-4">Навигация</div>
-                    <div class="space-y-2">
-                        <a href="{{ url_for('main.catalog') }}" class="block text-leather-beige hover:text-white transition-colors">Каталог</a>
-                        <a href="{{ url_for('main.about') }}" class="block text-leather-beige hover:text-white transition-colors">О компании</a>
-                        <a href="{{ url_for('main.blog') }}" class="block text-leather-beige hover:text-white transition-colors">Блог</a>
-                        <a href="{{ url_for('main.contact') }}" class="block text-leather-beige hover:text-white transition-colors">Контакты</a>
-                    </div>
-                </div>
-                <div>
-                    <div class="font-bold text-lg mb-4">Информация</div>
-                    <div class="space-y-2">
-                        <a href="{{ url_for('main.sitemap') }}" class="block text-leather-beige hover:text-white transition-colors">Карта сайта</a>
-                    </div>
-                </div>
-                <div>
-                    <div class="font-bold text-lg mb-4">Мы в соцсетях</div>
-                    <div class="flex space-x-4">
-                        <a href="#" class="w-10 h-10 bg-leather-medium rounded-full flex items-center justify-center hover:bg-leather-light transition-colors">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                        <a href="#" class="w-10 h-10 bg-leather-medium rounded-full flex items-center justify-center hover:bg-leather-light transition-colors">
-                            <i class="fab fa-facebook-f"></i>
-                        </a>
-                        <a href="#" class="w-10 h-10 bg-leather-medium rounded-full flex items-center justify-center hover:bg-leather-light transition-colors">
-                            <i class="fab fa-telegram-plane"></i>
-                        </a>
-                    </div>
-                </div>
+                <h3 class="text-xl font-bold text-leather-dark mb-3">100% натуральная кожа</h3>
+                <p class="text-gray-600 leading-relaxed">Работаем только с премиум материалами от проверенных поставщиков</p>
             </div>
-            <div class="border-t border-leather-medium pt-8 text-center text-leather-beige">
-                <p>&copy; 2024 LeatherCraft. Все права защищены.</p>
+            <div class="text-center">
+                <div class="w-16 h-16 bg-leather-dark rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-hands text-white text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-leather-dark mb-3">Ручная работа</h3>
+                <p class="text-gray-600 leading-relaxed">Каждое изделие создается опытными мастерами с вниманием к деталям</p>
+            </div>
+            <div class="text-center">
+                <div class="w-16 h-16 bg-leather-dark rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-truck text-white text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-leather-dark mb-3">Доставка по всему миру</h3>
+                <p class="text-gray-600 leading-relaxed">Оптовые поставки с гибкими условиями для B2B клиентов</p>
             </div>
         </div>
-    </footer>
+    </div>
+</section>
 
-    {% block extra_scripts %}{% endblock %}
-</body>
-</html>
+{% if featured_products %}
+<section class="py-16 sm:py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-leather-dark mb-4">Популярные товары</h2>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for product in featured_products %}
+            <div class="group">
+                <a href="{{ url_for('main.product_detail', slug=product.slug) }}">
+                    <div class="relative overflow-hidden bg-gray-100 mb-4 aspect-square">
+                        <img src="{% if product.image_file %}{{ url_for('static', filename='uploads/' + product.image_file) }}{% else %}{{ product.image_url or 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&q=80' }}{% endif %}" alt="{{ product.name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    </div>
+                    <h3 class="text-xl font-bold text-leather-dark mb-2">{{ product.name }}</h3>
+                    <p class="text-gray-600 mb-3">{{ product.short_description or product.description[:100] }}</p>
+                    <p class="text-2xl font-bold text-leather-dark">от {{ product.price }} ₽</p>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-12">
+            <a href="{{ url_for('main.catalog') }}" class="btn btn-primary px-10 py-4 text-lg inline-block">Смотреть весь каталог</a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% if recent_posts %}
+<section class="py-16 sm:py-24 bg-leather-cream">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-leather-dark mb-4">Последние статьи</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {% for post in recent_posts %}
+            <div class="bg-white rounded-sm overflow-hidden shadow-sm">
+                {% if post.image_file or post.image_url %}
+                <img src="{% if post.image_file %}{{ url_for('static', filename='uploads/' + post.image_file) }}{% else %}{{ post.image_url }}{% endif %}" alt="{{ post.title }}" class="w-full h-48 object-cover">
+                {% endif %}
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-leather-dark mb-2">
+                        <a href="{{ url_for('main.blog_post', slug=post.slug) }}">{{ post.title }}</a>
+                    </h3>
+                    <p class="text-gray-600 mb-4">{{ post.excerpt or post.content[:150] }}...</p>
+                    <a href="{{ url_for('main.blog_post', slug=post.slug) }}" class="text-leather-dark hover:text-leather-medium font-medium">Читать далее →</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-12">
+            <a href="{{ url_for('main.blog') }}" class="btn btn-primary px-10 py-4 text-lg inline-block">Все статьи</a>
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}
 
