@@ -129,7 +129,19 @@ def about():
         'countries': Content.query.filter_by(key='stats_countries').first()
     }
 
-    return render_template('about.html', about_content=about_content, stats=stats)
+    # Получаем изображения
+    about_images = []
+    for i in range(1, 5):
+        img_content = Content.query.filter_by(key=f'about_image_{i}').first()
+        if img_content and img_content.content:
+            if img_content.content.startswith('http'):
+                about_images.append(img_content.content)
+            else:
+                about_images.append(url_for('static', filename=f'uploads/{img_content.content}'))
+        else:
+            about_images.append(None)
+
+    return render_template('about.html', about_content=about_content, stats=stats, about_images=about_images)
 
 
 @main.route('/contact', methods=['GET', 'POST'])
