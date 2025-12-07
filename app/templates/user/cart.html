@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Корзина{% endblock %}
+
+{% block content %}
+<section class="py-16 sm:py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 class="text-3xl font-bold text-leather-dark mb-8">Корзина</h1>
+        
+        {% if cart_items %}
+        <div class="bg-white rounded-sm shadow-sm overflow-hidden">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-leather-cream">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Товар</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Цена</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Количество</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Итого</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase"></th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    {% for item in cart_items %}
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 h-16 w-16">
+                                    <img src="{% if item.product.image_file %}{{ url_for('static', filename='uploads/' + item.product.image_file) }}{% else %}{{ item.product.image_url or 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&q=80' }}{% endif %}" alt="{{ item.product.name }}" class="h-16 w-16 object-cover rounded">
+                                </div>
+                                <div class="ml-4">
+                                    <a href="{{ url_for('main.product_detail', slug=item.product.slug) }}" class="text-sm font-medium text-leather-dark hover:text-leather-medium">{{ item.product.name }}</a>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.product.price }} ₽</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <form method="POST" action="{{ url_for('user.cart_update') }}" class="flex items-center gap-2">
+                                <input type="number" name="quantity_{{ item.product.id }}" value="{{ item.quantity }}" min="1" max="{{ item.product.stock_quantity }}" class="w-20 px-2 py-1 border border-gray-300 rounded-sm">
+                                <button type="submit" class="text-leather-dark hover:text-leather-medium text-sm">Обновить</button>
+                            </form>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ item.total }} ₽</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+                            <form method="POST" action="{{ url_for('user.cart_remove', product_id=item.product.id) }}">
+                                <button type="submit" class="text-red-600 hover:text-red-800">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            <div class="bg-leather-cream px-6 py-4 flex justify-between items-center">
+                <div class="text-xl font-bold text-leather-dark">Итого: {{ total }} ₽</div>
+                <a href="{{ url_for('user.checkout') }}" class="btn btn-primary px-8 py-3">
+                    Оформить заказ
+                </a>
+            </div>
+        </div>
+        {% else %}
+        <div class="text-center py-12">
+            <p class="text-xl text-gray-600 mb-4">Корзина пуста</p>
+            <a href="{{ url_for('main.catalog') }}" class="btn btn-primary px-8 py-3 inline-block">
+                Перейти в каталог
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+

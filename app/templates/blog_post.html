@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}{{ post.title }} — Блог LeatherCraft{% endblock %}
+
+{% block content %}
+<section class="py-16 sm:py-24">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <article>
+            {% if post.image_url %}
+            <img src="{{ post.image_url }}" alt="{{ post.title }}" class="w-full h-96 object-cover rounded-sm mb-8">
+            {% endif %}
+
+            <h1 class="text-3xl sm:text-4xl font-bold text-leather-dark mb-4">{{ post.title }}</h1>
+
+            <div class="flex items-center text-gray-600 mb-8">
+                <span>{{ post.created_at.strftime('%d.%m.%Y') }}</span>
+                {% if post.author %}
+                <span class="mx-2">•</span>
+                <span>{{ post.author.full_name or post.author.username }}</span>
+                {% endif %}
+                <span class="mx-2">•</span>
+                <span>{{ post.views_count }} просмотров</span>
+            </div>
+
+            <div class="prose max-w-none text-gray-700 leading-relaxed">
+                {{ post.content|safe }}
+            </div>
+        </article>
+
+        {% if related_posts %}
+        <div class="mt-16">
+            <h2 class="text-2xl font-bold text-leather-dark mb-8">Похожие статьи</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {% for related in related_posts %}
+                <div class="bg-white rounded-sm overflow-hidden shadow-sm">
+                    {% if related.image_url %}
+                    <img src="{{ related.image_url }}" alt="{{ related.title }}" class="w-full h-48 object-cover">
+                    {% endif %}
+                    <div class="p-6">
+                        <h3 class="text-lg font-bold text-leather-dark mb-2">
+                            <a href="{{ url_for('main.blog_post', slug=related.slug) }}" class="hover:text-leather-medium">{{ related.title }}</a>
+                        </h3>
+                        <p class="text-gray-600 text-sm mb-4">{{ related.excerpt or related.content[:100] }}...</p>
+                        <a href="{{ url_for('main.blog_post', slug=related.slug) }}" class="text-leather-dark hover:text-leather-medium text-sm font-medium">Читать далее →</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="mt-12 text-center">
+            <a href="{{ url_for('main.blog') }}" class="bg-leather-dark text-white px-8 py-3 rounded-sm hover:bg-leather-medium transition-colors font-medium inline-block">
+                ← Вернуться к списку статей
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
