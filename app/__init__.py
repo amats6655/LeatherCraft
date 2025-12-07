@@ -39,8 +39,4 @@ def create_app():
     app.register_blueprint(admin, url_prefix='/admin')
     app.register_blueprint(user, url_prefix='/user')
 
-    # Создание таблиц
-    with app.app_context():
-        db.create_all()
-
     return app
