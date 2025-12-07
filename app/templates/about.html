@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}О компании{% endblock %}
+
+{% block content %}
+<section class="py-16 sm:py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-16">
+            <div>
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-leather-dark mb-6">О компании LeatherCraft</h2>
+                <div class="space-y-6 text-gray-600 text-lg leading-relaxed">
+                    {% if about_content %}
+                    <p>{{ about_content.content }}</p>
+                    {% else %}
+                    <p>С 1985 года мы создаем изделия из натуральной кожи, сочетая традиционные техники ручной работы с современными технологиями производства.</p>
+                    <p>Наша мастерская начиналась как небольшое семейное предприятие и выросла в признанного производителя премиум кожаных изделий, поставляющего продукцию в более чем 30 стран мира.</p>
+                    {% endif %}
+                </div>
+                {% if stats %}
+                <div class="grid grid-cols-3 gap-6 mt-10">
+                    <div>
+                        <div class="text-4xl font-bold text-leather-dark mb-2">{{ stats.years.content if stats.years else '38+' }}</div>
+                        <div class="text-gray-600">лет опыта</div>
+                    </div>
+                    <div>
+                        <div class="text-4xl font-bold text-leather-dark mb-2">{{ stats.masters.content if stats.masters else '45' }}</div>
+                        <div class="text-gray-600">мастеров</div>
+                    </div>
+                    <div>
+                        <div class="text-4xl font-bold text-leather-dark mb-2">{{ stats.countries.content if stats.countries else '30+' }}</div>
+                        <div class="text-gray-600">стран</div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                {% for i in range(4) %}
+                <div class="aspect-square overflow-hidden rounded-sm">
+                    {% if about_images[i] %}
+                        <img src="{{ about_images[i] }}" alt="Изображение {{ i+1 }}" class="w-full h-full object-cover">
+                    {% else %}
+                        <img src="https://placehold.co/600x400" alt="Изображение {{ i+1 }}" class="w-full h-full object-cover">
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+

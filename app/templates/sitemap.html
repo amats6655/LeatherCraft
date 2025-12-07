@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Карта сайта{% endblock %}
+
+{% block content %}
+<section class="py-16 sm:py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="mb-8">
+            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-leather-dark mb-4">Карта сайта</h1>
+            <p class="text-lg text-gray-600">Навигация по всем разделам сайта LeatherCraft</p>
+        </div>
+
+        <div class="space-y-12">
+            <div class="bg-white rounded-sm shadow-sm p-6">
+                <h2 class="text-2xl font-bold text-leather-dark mb-4 pb-2 border-b-2 border-leather-cream">Основные страницы</h2>
+                <ul class="space-y-3">
+                    <li><a href="{{ url_for('main.index') }}" class="text-leather-dark hover:text-leather-medium text-lg flex items-center"><i class="fas fa-home mr-2"></i> Главная страница</a></li>
+                    <li><a href="{{ url_for('main.catalog') }}" class="text-leather-dark hover:text-leather-medium text-lg flex items-center"><i class="fas fa-shopping-bag mr-2"></i> Каталог товаров</a></li>
+                    <li><a href="{{ url_for('main.about') }}" class="text-leather-dark hover:text-leather-medium text-lg flex items-center"><i class="fas fa-info-circle mr-2"></i> О компании</a></li>
+                    <li><a href="{{ url_for('main.blog') }}" class="text-leather-dark hover:text-leather-medium text-lg flex items-center"><i class="fas fa-newspaper mr-2"></i> Блог</a></li>
+                    <li><a href="{{ url_for('main.contact') }}" class="text-leather-dark hover:text-leather-medium text-lg flex items-center"><i class="fas fa-envelope mr-2"></i> Контакты</a></li>
+                    <li><a href="{{ url_for('auth.login') }}" class="text-leather-dark hover:text-leather-medium text-lg flex items-center"><i class="fas fa-sign-in-alt mr-2"></i> Вход в систему</a></li>
+                    <li><a href="{{ url_for('auth.register') }}" class="text-leather-dark hover:text-leather-medium text-lg flex items-center"><i class="fas fa-user-plus mr-2"></i> Регистрация</a></li>
+                </ul>
+            </div>
+
+            {% if categories %}
+            <div class="bg-white rounded-sm shadow-sm p-6">
+                <h2 class="text-2xl font-bold text-leather-dark mb-4 pb-2 border-b-2 border-leather-cream">Категории товаров</h2>
+                <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+                    {% for category in categories %}
+                    <li><a href="{{ url_for('main.catalog', category=category.slug) }}" class="text-leather-dark hover:text-leather-medium text-lg flex items-center"><i class="fas fa-folder mr-2"></i> {{ category.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            {% if products %}
+            <div class="bg-white rounded-sm shadow-sm p-6">
+                <h2 class="text-2xl font-bold text-leather-dark mb-4 pb-2 border-b-2 border-leather-cream">Товары ({{ products|length }})</h2>
+                <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {% for product in products %}
+                    <li><a href="{{ url_for('main.product_detail', slug=product.slug) }}" class="text-leather-dark hover:text-leather-medium flex items-start"><i class="fas fa-box mr-2 mt-1"></i> <span>{{ product.name }}</span></a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            {% if posts %}
+            <div class="bg-white rounded-sm shadow-sm p-6">
+                <h2 class="text-2xl font-bold text-leather-dark mb-4 pb-2 border-b-2 border-leather-cream">Статьи блога ({{ posts|length }})</h2>
+                <ul class="space-y-2">
+                    {% for post in posts %}
+                    <li><a href="{{ url_for('main.blog_post', slug=post.slug) }}" class="text-leather-dark hover:text-leather-medium text-lg flex items-center"><i class="fas fa-file-alt mr-2"></i> {{ post.title }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+
+    </div>
+</section>
+{% endblock %}
+

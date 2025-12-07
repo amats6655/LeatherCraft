@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}Контакты{% endblock %}
+
+{% block content %}
+<section class="py-16 sm:py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-leather-dark mb-4">Контакты</h2>
+            <p class="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto">Свяжитесь с нами для обсуждения вашего заказа или сотрудничества</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+            <div>
+                <h3 class="text-2xl font-bold text-leather-dark mb-8">Контактная информация</h3>
+                <div class="space-y-6">
+                    {% if contact_info.address %}
+                    <div class="flex items-start">
+                        <div class="w-12 h-12 bg-leather-cream rounded-full flex items-center justify-center flex-shrink-0 mr-4">
+                            <i class="fas fa-map-marker-alt text-leather-dark text-xl"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-lg mb-1 text-leather-dark">Адрес производства</div>
+                            <div class="text-gray-600">{{ contact_info.address.content }}</div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if contact_info.phone %}
+                    <div class="flex items-start">
+                        <div class="w-12 h-12 bg-leather-cream rounded-full flex items-center justify-center flex-shrink-0 mr-4">
+                            <i class="fas fa-phone text-leather-dark text-xl"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-lg mb-1 text-leather-dark">Телефон</div>
+                            <div class="text-gray-600">{{ contact_info.phone.content }}</div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if contact_info.email %}
+                    <div class="flex items-start">
+                        <div class="w-12 h-12 bg-leather-cream rounded-full flex items-center justify-center flex-shrink-0 mr-4">
+                            <i class="fas fa-envelope text-leather-dark text-xl"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-lg mb-1 text-leather-dark">Email</div>
+                            <div class="text-gray-600">
+                                <a href="mailto:{{ contact_info.email.content }}" class="text-leather-dark hover:text-leather-medium">{{ contact_info.email.content }}</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if contact_info.hours %}
+                    <div class="flex items-start">
+                        <div class="w-12 h-12 bg-leather-cream rounded-full flex items-center justify-center flex-shrink-0 mr-4">
+                            <i class="fas fa-clock text-leather-dark text-xl"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-lg mb-1 text-leather-dark">Режим работы</div>
+                            <div class="text-gray-600">{{ contact_info.hours.content }}</div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="bg-white p-8 rounded-sm shadow-sm">
+                <h3 class="text-2xl font-bold text-leather-dark mb-6">Быстрая связь</h3>
+                <form method="POST" class="space-y-5">
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Ваше имя *</label>
+                        <input type="text" id="name" name="name" placeholder="Ваше имя" required class="w-full px-4 py-3 border border-gray-300 rounded-sm focus:outline-none focus:border-leather-dark text-gray-900">
+                    </div>
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email *</label>
+                        <input type="email" id="email" name="email" placeholder="Email" required class="w-full px-4 py-3 border border-gray-300 rounded-sm focus:outline-none focus:border-leather-dark text-gray-900">
+                    </div>
+                    <div>
+                        <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">Телефон</label>
+                        <input type="tel" id="phone" name="phone" placeholder="Телефон" class="w-full px-4 py-3 border border-gray-300 rounded-sm focus:outline-none focus:border-leather-dark text-gray-900">
+                    </div>
+                    <div>
+                        <label for="subject" class="block text-sm font-medium text-gray-700 mb-2">Тема</label>
+                        <input type="text" id="subject" name="subject" placeholder="Тема сообщения" class="w-full px-4 py-3 border border-gray-300 rounded-sm focus:outline-none focus:border-leather-dark text-gray-900">
+                    </div>
+                    <div>
+                        <label for="message" class="block text-sm font-medium text-gray-700 mb-2">Ваше сообщение *</label>
+                        <textarea id="message" name="message" placeholder="Ваше сообщение" rows="4" required class="w-full px-4 py-3 border border-gray-300 rounded-sm focus:outline-none focus:border-leather-dark text-gray-900 resize-none"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-full px-6 py-4 text-lg">Отправить сообщение</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
