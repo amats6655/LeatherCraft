@@ -39,6 +39,29 @@ def profile():
 
     return render_template('user/profile.html')
 
+
+@user.route('/cart')
+@login_required
+def cart():
+    """Корзина"""
+    cart_items = session.get('cart', [])
+    products = []
+    total = Decimal('0.00')
+
+    for item in cart_items:
+        product = Product.query.get(item['product_id'])
+        if product and product.is_active:
+            quantity = item['quantity']
+            item_total = product.price * quantity
+            total += item_total
+            products.append({
+                'product': product,
+                'quantity': quantity,
+                'total': item_total
+            })
+
+    return render_template('user/cart.html', cart_items=products, total=total)
+
 @user.route('/cart/add/<int:product_id>', methods=['POST'])
 @login_required
 def card_add(product_id):
