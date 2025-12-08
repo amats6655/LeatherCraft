@@ -1,0 +1,12 @@
+# Установка окончаний строк для всех текстовых файлов
+* text=auto
+
+# Явно указываем для Python файлов
+*.py text eol=lf
+
+# Для шаблонов HTML
+*.html text eol=lf
+
+# Для Markdown
+*.md text eol=lf
+
