@@ -123,7 +123,7 @@ def cart_update():
             quantity = int(new_quantity)
             product = Product.query.get(product_id)
 
-            if product and quantity > 0 and quantity <= product.stok_quantity:
+            if product and 0 < quantity <= product.stock_quantity:
                 item['quantity'] = quantity
             elif quantity > product.stok_quantity:
                 flash(f'Недостаточно товара "{product.name}" на складе.', 'error')
@@ -136,8 +136,11 @@ def cart_update():
 @login_required
 def orders():
     """Список заказов пользователя"""
-    orders_list = Order.query.filter_by(user_id=current_user.id) \
-        .order_by(Order.created_at.desc()).all()
+    orders_list = (Order
+                   .query
+                   .filter_by(user_id=current_user.id)
+                   .order_by(Order.created_at.desc())
+                   .all())
 
     return render_template('user/orders.html', orders=orders_list)
 

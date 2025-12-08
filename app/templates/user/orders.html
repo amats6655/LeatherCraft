@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Мои заказы{% endblock %}
+
+{% block content %}
+<section class="py-16 sm:py-24">
+    <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+        <h1 class="text-3xl font-bold text-leather-dark mb-8">Мои заказы</h1>
+
+        {% if orders %}
+            <div class="bg-white rounded-sm shadow-sm overflow-hidden">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-leather-cream">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Номер заказа</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Дата</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Сумма</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Статус</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase"></th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {% for order in orders %}
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">#{{ order.id }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ order.created_at.strftime('%d.%m.%Y %H:%M') }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium"> {{ order.total_amount }} ₽</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                    <span class="px-3 py-1 text-sm rounded {% if order.status.value == 'pending' %} bg-yellow-100 text-yellow-800 {% elif order.status.value == 'processing' %} bg-blue-100 text-blue-800 {% elif order.status.value == 'shipped' %}bg-purple-100 text-purple-800 {% elif order.status.value == 'delivered' %}bg-green-100 text-green-800 {% else %} bg-red-100 text-red-800 {% endif %}">
+                                        {% if order.status.value == 'pending' %}Ожидает{% elif order.status.value == 'processing' %}В обработке{% elif order.status.value == 'shipped' %}Отправлен{% elif order.status.value == 'delivered' %}Доставлен{% else %}Отменен{% endif %}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                    <a href="{{ url_for('user.order_detail', order_id=order.id) }}" class="text-leather-dark hover:text-leather-medium">Подробнее</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+        <div class="text-center py-12 bg-white rounded-sm shadow-sm">
+            <p class="text-xl text-gray-600 mb-4">У вас пока нет заказов</p>
+            <a href="{{ url_for('main.catalog') }}" class="bg-leather-dark text-white px-8 py-3 rounded-sm hover:bg-leather-medium transition-colors font-medium inline-blick">
+                Исправить это недоразумение
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
