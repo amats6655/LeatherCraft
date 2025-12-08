@@ -25,7 +25,7 @@ def create_app():
     bcrypt.init_app(app)
 
     login_manager.login_view = 'auth.login'
-    login_manager.login_message = 'Пожалуйста, войдите в систему для досупа к этой странице'
+    login_manager.login_message = 'Пожалуйста, войдите в систему для доступа к этой странице'
     login_manager.login_message_category = 'info'
 
     # Регистрацию Blueprint'ов
