@@ -18,8 +18,8 @@
             <textarea name="description" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-sm focus:outline-none focus:border-leather-dark">{{ category.description if category else '' }}</textarea>
         </div>
         <div class="flex gap-4">
-            <button type="submit" class="bg-leather-dark text-white px-6 py-2 rounded-sm hover:bg-leather-medium">Сохранить</button>
-            <a href="{{ url_for('admin.categories') }}" class="bg-gray-300 text-gray-700 px-6 py-2 rounded-sm hover:bg-gray-400">Отмена</a>
+            <button type="submit" class="btn btn-primary px-6 py-2">Сохранить</button>
+            <a href="{{ url_for('admin.categories') }}" class="btn btn-secondary px-6 py-2">Отмена</a>
         </div>
     </form>
 </div>

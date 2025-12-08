@@ -26,7 +26,7 @@
                 <option value="delivered" {% if order.status.value == 'delivered' %}selected{% endif %}>Доставлен</option>
                 <option value="cancelled" {% if order.status.value == 'cancelled' %}selected{% endif %}>Отменен</option>
             </select>
-            <button type="submit" class="bg-leather-dark text-white px-6 py-2 rounded-sm hover:bg-leather-medium w-full">Обновить статус</button>
+            <button type="submit" class="btn btn-primary px-6 py-2 w-full">Обновить статус</button>
         </form>
     </div>
 </div>

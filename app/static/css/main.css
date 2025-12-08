@@ -1,209 +1,143 @@
-/* Основные стили для стандартного режима */
+/* ============================================
+   СИСТЕМА CSS ПЕРЕМЕННЫХ ДЛЯ СТАНДАРТНОГО СТИЛЯ
+   ============================================ */
 :root {
-    --leather-dark: #3E2723;
-    --leather-medium: #6D4C41;
-    --leather-light: #A1887F;
-    --leather-cream: #EFEBE9;
-    --leather-beige: #D7CCC8;
-    --text-primary: #1a1a1a;
-    --text-secondary: #4a4a4a;
+    /* Цвета кожаной темы */
+    --color-leather-dark: #3E2723;
+    --color-leather-medium: #6D4C41;
+    --color-leather-light: #A1887F;
+    --color-leather-cream: #EFEBE9;
+    --color-leather-beige: #D7CCC8;
+
+    /* Основные цвета */
+    --color-primary: #3E2723;
+    --color-primary-hover: #6D4C41;
+    --color-secondary: #6D4C41;
+    --color-secondary-hover: #8D6E63;
+
+    /* Фоны */
     --bg-primary: #ffffff;
     --bg-secondary: #EFEBE9;
+    --bg-tertiary: #F5F5F5;
+
+    /* Текст */
+    --text-primary: #1a1a1a;
+    --text-secondary: #4a4a4a;
+    --text-muted: #6b7280;
+    --text-inverse: #ffffff;
+
+    /* Границы */
+    --border-color: #d1d5db;
+    --border-color-dark: #9ca3af;
+    --border-width: 1px;
+    --border-radius: 0.125rem;
+
+    /* Кнопки */
+    --btn-primary-bg: var(--color-primary);
+    --btn-primary-color: var(--text-inverse);
+    --btn-primary-hover-bg: var(--color-primary-hover);
+    --btn-secondary-bg: var(--bg-secondary);
+    --btn-secondary-color: var(--text-primary);
+    --btn-secondary-hover-bg: var(--color-leather-beige);
+
+    /* Типографика */
     --font-size-base: 16px;
-    --font-size-small: 14px;
-    --font-size-large: 18px;
+    --font-size-sm: 14px;
+    --font-size-lg: 18px;
+    --font-size-xl: 20px;
+    --font-size-2xl: 24px;
+    --font-size-3xl: 30px;
     --line-height-base: 1.6;
-    --spacing-base: 1rem;
+    --line-height-tight: 1.2;
+
+    /* Отступы */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+
+    /* Тени */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 
-/* Стили для слабовидящих (ГОСТ Р 52872-2012)
-   Требования: контрастность не менее 4.5:1, размер шрифта не менее 14pt,
-   четкие границы, увеличенные отступы */
+/* ============================================
+   СТИЛИ ДЛЯ СЛАБОВИДЯЩИХ (ГОСТ Р 52872-2012)
+   Требования: контрастность ≥4.5:1, шрифт ≥14pt
+   ============================================ */
 body.accessibility-mode {
-    --leather-dark: #000000;
-    --leather-medium: #000000;
-    --leather-light: #000000;
-    --leather-cream: #ffffff;
-    --leather-beige: #ffffff;
-    --text-primary: #000000;
-    --text-secondary: #000000;
+    /* Цвета с высоким контрастом (контрастность 7:1 и выше) */
+    --color-primary: #003366; /* Темно-синий - контраст 7.1:1 с белым */
+    --color-primary-hover: #004488;
+    --color-secondary: #006633; /* Темно-зеленый - контраст 6.8:1 */
+    --color-secondary-hover: #008844;
+
+    /* Фоны - белый и светло-серый для контраста */
     --bg-primary: #ffffff;
-    --bg-secondary: #ffffff;
-    --font-size-base: 18px; /* Минимум 14pt = ~18.67px, используем 18px */
-    --font-size-small: 16px;
-    --font-size-large: 22px;
-    --line-height-base: 1.8;
-    --spacing-base: 1.5rem;
+    --bg-secondary: #f5f5f5;
+    --bg-tertiary: #eeeeee;
+
+    /* Текст - темно-серый на белом (контраст 12.6:1) */
+    --text-primary: #1a1a1a;
+    --text-secondary: #2a2a2a;
+    --text-muted: #3a3a3a;
+    --text-inverse: #ffffff;
+
+    /* Границы - более толстые и контрастные */
+    --border-color: #333333; /* Контраст 12.6:1 */
+    --border-color-dark: #1a1a1a;
     --border-width: 2px;
+    --border-radius: 0.25rem;
+
+    /* Кнопки - контрастные, но не черно-белые */
+    --btn-primary-bg: #003366; /* Темно-синий */
+    --btn-primary-color: #ffffff;
+    --btn-primary-hover-bg: #004488;
+    --btn-secondary-bg: #ffffff;
+    --btn-secondary-color: #1a1a1a;
+    --btn-secondary-hover-bg: #f0f0f0;
+    --btn-secondary-border: #333333;
+
+    /* Типографика - увеличенные размеры (минимум 14pt = 18.67px) */
+    --font-size-base: 19px; /* Чуть больше минимума для комфорта */
+    --font-size-sm: 17px;
+    --font-size-lg: 22px;
+    --font-size-xl: 26px;
+    --font-size-2xl: 30px;
+    --font-size-3xl: 38px;
+    --line-height-base: 1.8;
+    --line-height-tight: 1.5;
+
+    /* Увеличенные отступы для лучшей читаемости */
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 0.75rem;
+    --spacing-md: 1.5rem;
+    --spacing-lg: 2rem;
+    --spacing-xl: 3rem;
 }
 
-body.accessibility-mode {
-    font-size: var(--font-size-base);
-    line-height: var(--line-height-base);
-    color: var(--text-primary);
-    background-color: var(--bg-primary);
-}
-
-/* Высокий контраст для всех элементов */
-body.accessibility-mode * {
-    border-width: 2px !important;
-}
-
-/* Ссылки с высоким контрастом и подчеркиванием */
-body.accessibility-mode a {
-    text-decoration: underline !important;
-    color: #0000ff !important;
-    font-weight: bold !important;
-    border-bottom: 2px solid #0000ff !important;
-}
-
-body.accessibility-mode a:hover,
-body.accessibility-mode a:focus {
-    background-color: #ffff00 !important;
-    color: #000000 !important;
-    outline: 3px solid #000000 !important;
-    outline-offset: 2px !important;
-}
-
-/* Улучшенная видимость текста */
-body.accessibility-mode p,
-body.accessibility-mode span,
-body.accessibility-mode div {
-    color: #000000 !important;
-    background-color: #ffffff !important;
-}
-
-body.accessibility-mode button,
-body.accessibility-mode .btn,
-body.accessibility-mode a[role="button"] {
-    min-height: 44px !important;
-    min-width: 120px !important;
-    font-size: var(--font-size-large) !important;
-    font-weight: bold !important;
-    border: 3px solid #000000 !important;
-    padding: 12px 24px !important;
-    background-color: #ffffff !important;
-    color: #000000 !important;
-    text-decoration: none !important;
-}
-
-body.accessibility-mode button:hover,
-body.accessibility-mode button:focus,
-body.accessibility-mode .btn:hover,
-body.accessibility-mode .btn:focus {
-    background-color: #000000 !important;
-    color: #ffffff !important;
-    outline: 3px solid #ffff00 !important;
-    outline-offset: 2px !important;
-}
-
-body.accessibility-mode input,
-body.accessibility-mode textarea,
-body.accessibility-mode select {
-    min-height: 44px !important;
-    font-size: var(--font-size-base) !important;
-    border: 3px solid #000000 !important;
-    padding: 12px !important;
-    background-color: #ffffff !important;
-    color: #000000 !important;
-}
-
-body.accessibility-mode input:focus,
-body.accessibility-mode textarea:focus,
-body.accessibility-mode select:focus {
-    outline: 3px solid #0000ff !important;
-    outline-offset: 2px !important;
-    border-color: #0000ff !important;
-}
-
-body.accessibility-mode h1 {
-    font-size: 2.5em !important;
-    font-weight: bold !important;
-    line-height: 1.3 !important;
-    margin-bottom: 1em !important;
-    color: #000000 !important;
-    border-bottom: 3px solid #000000 !important;
-    padding-bottom: 0.5em !important;
-}
-
-body.accessibility-mode h2 {
-    font-size: 2em !important;
-    font-weight: bold !important;
-    line-height: 1.3 !important;
-    margin-bottom: 0.8em !important;
-    color: #000000 !important;
-    border-bottom: 2px solid #000000 !important;
-    padding-bottom: 0.3em !important;
-}
-
-body.accessibility-mode h3 {
-    font-size: 1.5em !important;
-    font-weight: bold !important;
-    line-height: 1.4 !important;
-    margin-bottom: 0.6em !important;
-    color: #000000 !important;
-}
-
-body.accessibility-mode p {
-    font-size: var(--font-size-base) !important;
-    line-height: var(--line-height-base) !important;
-    margin-bottom: 1em !important;
-    color: #000000 !important;
-}
-
-/* Улучшенная видимость навигации */
-body.accessibility-mode nav {
-    border-bottom: 3px solid #000000 !important;
-    background-color: #ffffff !important;
-}
-
-body.accessibility-mode nav a {
-    padding: 12px 16px !important;
-    min-height: 44px !important;
-    display: inline-flex !important;
-    align-items: center !important;
-}
-
-/* Улучшенная видимость карточек и блоков */
-body.accessibility-mode .bg-white,
-body.accessibility-mode .bg-leather-cream {
-    background-color: #ffffff !important;
-    border: 2px solid #000000 !important;
-    padding: 1.5rem !important;
-}
-
-/* Улучшенная видимость таблиц */
-body.accessibility-mode table {
-    border: 3px solid #000000 !important;
-}
-
-body.accessibility-mode th,
-body.accessibility-mode td {
-    border: 2px solid #000000 !important;
-    padding: 12px !important;
-    font-size: var(--font-size-base) !important;
-}
-
-body.accessibility-mode th {
-    background-color: #000000 !important;
-    color: #ffffff !important;
-    font-weight: bold !important;
-}
-
-/* Улучшенная типографика */
+/* ============================================
+   БАЗОВЫЕ СТИЛИ
+   ============================================ */
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     font-size: var(--font-size-base);
     line-height: var(--line-height-base);
     color: var(--text-primary);
+    background-color: var(--bg-primary);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     letter-spacing: 0.01em;
 }
 
+/* ============================================
+   ТИПОГРАФИКА
+   ============================================ */
 h1, h2, h3, h4, h5, h6 {
     font-weight: 700;
-    line-height: 1.2;
+    line-height: var(--line-height-tight);
     margin-top: 0;
     margin-bottom: 0.5em;
     color: var(--text-primary);
@@ -211,80 +145,250 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1 {
-    font-size: 2.5rem;
-    line-height: 1.1;
+    font-size: var(--font-size-3xl);
 }
 
 h2 {
-    font-size: 2rem;
-    line-height: 1.2;
+    font-size: var(--font-size-2xl);
 }
 
 h3 {
-    font-size: 1.5rem;
-    line-height: 1.3;
+    font-size: var(--font-size-xl);
 }
 
 p {
-    margin-bottom: var(--spacing-base);
+    margin-bottom: var(--spacing-md);
     line-height: 1.7;
     color: var(--text-secondary);
 }
 
 a {
-    color: var(--leather-dark);
+    color: var(--color-primary);
     text-decoration: none;
     transition: color 0.2s ease;
 }
 
 a:hover {
-    color: var(--leather-medium);
+    color: var(--color-primary-hover);
     text-decoration: underline;
 }
 
-/* Улучшенная читаемость для длинных текстов */
-article p,
-.content p {
-    max-width: 65ch;
-    margin-bottom: 1.25em;
+/* ============================================
+   КНОПКИ - СТАНДАРТИЗИРОВАННЫЕ
+   ============================================ */
+.btn,
+button[type="submit"],
+button[type="button"],
+a[role="button"] {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    line-height: 1.5;
+    text-align: center;
+    text-decoration: none;
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-height: 44px;
+    min-width: 120px;
 }
 
-/* Улучшенные списки */
-ul, ol {
-    margin-bottom: 1em;
-    padding-left: 1.5em;
+/* Основная кнопка */
+.btn-primary,
+button.btn-primary,
+button[type="submit"]:not(.btn-secondary) {
+    background-color: var(--btn-primary-bg);
+    color: var(--btn-primary-color);
+    border-color: var(--btn-primary-bg);
 }
 
-li {
-    margin-bottom: 0.5em;
-    line-height: 1.6;
+.btn-primary:hover,
+button.btn-primary:hover,
+button[type="submit"]:not(.btn-secondary):hover {
+    background-color: var(--btn-primary-hover-bg);
+    border-color: var(--btn-primary-hover-bg);
+    color: var(--btn-primary-color);
 }
 
-/* Переключатель стилей */
+/* Вторичная кнопка */
+.btn-secondary,
+button.btn-secondary {
+    background-color: var(--btn-secondary-bg);
+    color: var(--btn-secondary-color);
+    border-color: var(--border-color);
+}
+
+.btn-secondary:hover,
+button.btn-secondary:hover {
+    background-color: var(--btn-secondary-hover-bg);
+    border-color: var(--border-color-dark);
+}
+
+/* Кнопка-ссылка */
+.btn-link {
+    background: none;
+    border: none;
+    color: var(--color-primary);
+    text-decoration: underline;
+    padding: 0.5rem;
+    min-width: auto;
+}
+
+.btn-link:hover {
+    background-color: transparent;
+    color: var(--color-primary-hover);
+}
+
+/* ============================================
+   ФОРМЫ
+   ============================================ */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="password"],
+input[type="number"],
+textarea,
+select {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: var(--font-size-base);
+    line-height: 1.5;
+    color: var(--text-primary);
+    background-color: var(--bg-primary);
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--border-radius);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    min-height: 44px;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(62, 39, 35, 0.1);
+}
+
+body.accessibility-mode input:focus,
+body.accessibility-mode textarea:focus,
+body.accessibility-mode select:focus {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+    border-color: var(--color-primary);
+    box-shadow: none;
+}
+
+/* ============================================
+   КАРТОЧКИ И БЛОКИ
+   ============================================ */
+.card {
+    background-color: var(--bg-primary);
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-sm);
+}
+
+body.accessibility-mode .card {
+    border-width: 2px;
+    border-color: var(--border-color);
+}
+
+/* ============================================
+   НАВИГАЦИЯ
+   ============================================ */
+nav a {
+    color: var(--text-primary);
+    padding: 0.5rem 1rem;
+    display: inline-block;
+    transition: all 0.2s ease;
+}
+
+nav a:hover {
+    color: var(--color-primary);
+    background-color: var(--bg-secondary);
+}
+
+body.accessibility-mode nav a {
+    border-bottom: 2px solid transparent;
+    padding: 0.75rem 1rem;
+}
+
+body.accessibility-mode nav a:hover,
+body.accessibility-mode nav a:focus {
+    border-bottom-color: var(--color-primary);
+    background-color: var(--bg-secondary);
+    outline: 2px solid var(--color-primary);
+    outline-offset: -2px;
+}
+
+/* ============================================
+   ТАБЛИЦЫ
+   ============================================ */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border: var(--border-width) solid var(--border-color);
+}
+
+th, td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: var(--border-width) solid var(--border-color);
+}
+
+th {
+    background-color: var(--bg-secondary);
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+body.accessibility-mode table {
+    border-width: 2px;
+}
+
+body.accessibility-mode th,
+body.accessibility-mode td {
+    border-width: 2px;
+    padding: 1rem;
+}
+
+body.accessibility-mode th {
+    background-color: var(--text-primary);
+    color: var(--text-inverse);
+}
+
+/* ============================================
+   ПЕРЕКЛЮЧАТЕЛЬ СТИЛЕЙ
+   ============================================ */
 .style-switcher {
     position: fixed;
     bottom: 20px;
     right: 20px;
     z-index: 1000;
-    background: white;
-    border: 2px solid var(--leather-dark);
-    border-radius: 8px;
-    padding: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background: var(--bg-primary);
+    border: var(--border-width) solid var(--border-color);
+    border-radius: 0.5rem;
+    padding: var(--spacing-md);
+    box-shadow: var(--shadow-lg);
 }
 
 .style-switcher button {
     display: block;
     width: 100%;
-    padding: 8px 16px;
-    margin-bottom: 8px;
-    background: var(--leather-dark);
-    color: white;
-    border: none;
-    border-radius: 4px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.5rem;
+    background: var(--btn-primary-bg);
+    color: var(--btn-primary-color);
+    border: var(--border-width) solid var(--btn-primary-bg);
+    border-radius: var(--border-radius);
     cursor: pointer;
-    font-size: 14px;
-    transition: background 0.3s;
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    transition: all 0.2s ease;
+    min-height: 44px;
 }
 
 .style-switcher button:last-child {
@@ -292,13 +396,116 @@ li {
 }
 
 .style-switcher button:hover {
-    background: var(--leather-medium);
+    background: var(--btn-primary-hover-bg);
+    border-color: var(--btn-primary-hover-bg);
+}
+
+body.accessibility-mode .style-switcher {
+    border-width: 3px;
 }
 
 body.accessibility-mode .style-switcher button {
-    min-height: 44px;
-    font-size: 16px;
+    font-size: var(--font-size-base);
     font-weight: bold;
-    border: 2px solid #000000;
+    border-width: 2px;
 }
 
+/* ============================================
+   СПЕЦИФИЧНЫЕ СТИЛИ ДЛЯ СЛАБОВИДЯЩИХ
+   ============================================ */
+body.accessibility-mode {
+    /* Улучшенная видимость ссылок */
+    a:not(.btn):not(button) {
+        text-decoration: underline !important;
+        color: var(--color-primary) !important;
+        font-weight: 600 !important;
+        border-bottom: 1px solid var(--color-primary) !important;
+    }
+
+    a:not(.btn):not(button):hover,
+    a:not(.btn):not(button):focus {
+        background-color: #ffffcc !important;
+        color: var(--text-primary) !important;
+        outline: 2px solid var(--color-primary) !important;
+        outline-offset: 2px !important;
+    }
+
+    /* Улучшенная видимость заголовков */
+    h1 {
+        border-bottom: 3px solid var(--text-primary) !important;
+        padding-bottom: 0.5em !important;
+        margin-bottom: 1em !important;
+    }
+
+    h2 {
+        border-bottom: 2px solid var(--text-primary) !important;
+        padding-bottom: 0.3em !important;
+        margin-bottom: 0.8em !important;
+    }
+
+    /* Улучшенная видимость фона и карточек */
+    .bg-leather-cream,
+    .bg-white,
+    .card {
+        background-color: var(--bg-primary) !important;
+        border: var(--border-width) solid var(--border-color) !important;
+    }
+
+    /* Улучшенная видимость навигации */
+    nav {
+        border-bottom: 3px solid var(--border-color) !important;
+    }
+
+    nav a {
+        border-bottom: 2px solid transparent !important;
+    }
+
+    nav a:hover,
+    nav a:focus {
+        border-bottom-color: var(--color-primary) !important;
+        background-color: var(--bg-secondary) !important;
+    }
+
+    /* Убираем лишние тени для чистоты */
+    * {
+        box-shadow: none !important;
+    }
+
+    /* Улучшенная видимость таблиц */
+    table {
+        border: var(--border-width) solid var(--border-color) !important;
+    }
+
+    th {
+        background-color: var(--color-primary) !important;
+        color: var(--text-inverse) !important;
+        font-weight: bold !important;
+    }
+
+    td {
+        border: 1px solid var(--border-color) !important;
+    }
+}
+
+/* ============================================
+   УТИЛИТЫ
+   ============================================ */
+.text-primary {
+    color: var(--text-primary);
+}
+
+.text-secondary {
+    color: var(--text-secondary);
+}
+
+.bg-primary {
+    background-color: var(--bg-primary);
+}
+
+.bg-secondary {
+    background-color: var(--bg-secondary);
+}
+
+.border-primary {
+    border-color: var(--color-primary);
+}
