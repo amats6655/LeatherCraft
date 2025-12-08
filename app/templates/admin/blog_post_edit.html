@@ -1,0 +1,41 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<h1 class="text-3xl font-bold text-leather-dark mb-8">{% if post %}Редактировать статью{% else %}Новая статья{% endif %}</h1>
+
+<div class="bg-white rounded-sm shadow p-8">
+    <form method="POST" class="space-y-6">
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Название</label>
+            <input type="text" name="title" value="{{ post.title if post else '' }}" required class="w-full px-4 py-2 border border-gray-300 rounded-sm focus:outline-none focus:border-leather-dark">
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Slug</label>
+            <input type="text" name="slug" value="{{ post.slug if post else '' }}" required class="w-full px-4 py-2 border border-gray-300 rounded-sm focus:outline-none focus:border-leather-dark">
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Краткое описание</label>
+            <textarea name="excerpt" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-sm focus:outline-none focus:border-leather-dark">{{ post.excerpt if post else '' }}</textarea>
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Содержимое</label>
+            <textarea name="content" rows="15" required class="w-full px-4 py-2 border border-gray-300 rounded-sm focus:outline-none focus:border-leather-dark">{{ post.content if post else '' }}</textarea>
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">URL изображения</label>
+            <input type="url" name="image_url" value="{{ post.image_url if post else '' }}" class="w-full px-4 py-2 border border-gray-300 rounded-sm focus:outline-none focus:border-leather-dark">
+        </div>
+        <div>
+            <label class="flex items-center">
+                <input type="checkbox" name="is_published" {% if post and post.is_published %}checked{% endif %} class="mr-2">
+                <span class="text-sm text-gray-700">Опубликовано</span>
+            </label>
+        </div>
+        <div class="flex gap-4">
+            <button type="submit" class="bg-leather-dark text-white px-6 py-2 rounded-sm hover:bg-leather-medium">Сохранить</button>
+            <a href="{{ url_for('admin.blog_posts') }}" class="bg-gray-300 text-gray-700 px-6 py-2 rounded-sm hover:bg-gray-400">Отмена</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+

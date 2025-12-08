@@ -1,0 +1,34 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<div class="flex justify-between items-center mb-8">
+    <h1 class="text-3xl font-bold text-leather-dark">Категории</h1>
+    <a href="{{ url_for('admin.category_new') }}" class="bg-leather-dark text-white px-6 py-2 rounded-sm hover:bg-leather-medium">Добавить</a>
+</div>
+
+<div class="bg-white rounded-sm shadow overflow-hidden">
+    <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-leather-cream">
+            <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">ID</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Название</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Slug</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Действия</th>
+            </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+            {% for category in categories %}
+            <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ category.id }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ category.name }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ category.slug }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                    <a href="{{ url_for('admin.category_edit', category_id=category.id) }}" class="text-leather-dark hover:text-leather-medium mr-4">Редактировать</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+

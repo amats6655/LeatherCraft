@@ -1,0 +1,58 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<h1 class="text-3xl font-bold text-leather-dark mb-8">Заказ #{{ order.id }}</h1>
+
+<div class="grid grid-cols-2 gap-6 mb-6">
+    <div class="bg-white rounded-sm shadow p-6">
+        <h2 class="text-xl font-bold text-leather-dark mb-4">Информация о заказе</h2>
+        <div class="space-y-2">
+            <p><span class="font-medium">Пользователь:</span> {{ order.user.username }}</p>
+            <p><span class="font-medium">Дата:</span> {{ order.created_at.strftime('%d.%m.%Y %H:%M') }}</p>
+            <p><span class="font-medium">Сумма:</span> {{ order.total_amount }} ₽</p>
+            <p><span class="font-medium">Адрес:</span> {{ order.shipping_address }}</p>
+            {% if order.phone %}
+            <p><span class="font-medium">Телефон:</span> {{ order.phone }}</p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="bg-white rounded-sm shadow p-6">
+        <h2 class="text-xl font-bold text-leather-dark mb-4">Изменение статуса</h2>
+        <form method="POST" action="{{ url_for('admin.order_update_status', order_id=order.id) }}">
+            <select name="status" class="w-full px-4 py-2 border border-gray-300 rounded-sm mb-4">
+                <option value="pending" {% if order.status.value == 'pending' %}selected{% endif %}>Ожидает</option>
+                <option value="processing" {% if order.status.value == 'processing' %}selected{% endif %}>В обработке</option>
+                <option value="shipped" {% if order.status.value == 'shipped' %}selected{% endif %}>Отправлен</option>
+                <option value="delivered" {% if order.status.value == 'delivered' %}selected{% endif %}>Доставлен</option>
+                <option value="cancelled" {% if order.status.value == 'cancelled' %}selected{% endif %}>Отменен</option>
+            </select>
+            <button type="submit" class="bg-leather-dark text-white px-6 py-2 rounded-sm hover:bg-leather-medium w-full">Обновить статус</button>
+        </form>
+    </div>
+</div>
+
+<div class="bg-white rounded-sm shadow p-6">
+    <h2 class="text-xl font-bold text-leather-dark mb-4">Товары в заказе</h2>
+    <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-leather-cream">
+            <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Товар</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Цена</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Количество</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Итого</th>
+            </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+            {% for item in order.items %}
+            <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.product.name }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.price }} ₽</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.quantity }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.price * item.quantity }} ₽</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
