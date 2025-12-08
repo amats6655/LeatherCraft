@@ -1,0 +1,77 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<div class="flex justify-between items-center mb-8">
+    <h1 class="text-3xl font-bold text-leather-dark">Обращения</h1>
+    <div class="flex gap-4">
+        <a href="{{ url_for('admin.messages', unread='true') }}" class="px-4 py-2 {% if filter_unread %}bg-leather-dark text-white{% else %}bg-gray-200 text-gray-700{% endif %} rounded-sm hover:bg-leather-medium">
+            Непрочитанные
+        </a>
+        <a href="{{ url_for('admin.messages') }}" class="px-4 py-2 {% if not filter_unread %}bg-leather-dark text-white{% else %}bg-gray-200 text-gray-700{% endif %} rounded-sm hover:bg-leather-medium">
+            Все
+        </a>
+    </div>
+</div>
+
+<div class="bg-white rounded-sm shadow overflow-hidden">
+    <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-leather-cream">
+            <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">ID</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Имя</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Email</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Телефон</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Дата</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Статус</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Действия</th>
+            </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+            {% for message in messages %}
+            <tr class="{% if not message.is_read %}bg-yellow-50{% endif %}">
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">#{{ message.id }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ message.name }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ message.email }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ message.phone or '-' }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ message.created_at.strftime('%d.%m.%Y %H:%M') }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                    {% if message.is_read %}
+                    <span class="px-2 py-1 text-xs rounded bg-green-100 text-green-800">Прочитано</span>
+                    {% else %}
+                    <span class="px-2 py-1 text-xs rounded bg-yellow-100 text-yellow-800 font-bold">Новое</span>
+                    {% endif %}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                    <a href="{{ url_for('admin.message_detail', message_id=message.id) }}" class="text-leather-dark hover:text-leather-medium mr-4">Подробнее</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% if pagination.pages > 1 %}
+<div class="mt-6 flex justify-center">
+    <div class="flex gap-2">
+        {% if pagination.has_prev %}
+        <a href="{{ url_for('admin.messages', page=pagination.prev_num, unread='true' if filter_unread else 'false') }}" class="px-4 py-2 bg-leather-dark text-white rounded-sm hover:bg-leather-medium">Назад</a>
+        {% endif %}
+        {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+            {% if page_num %}
+                {% if page_num == pagination.page %}
+                <span class="px-4 py-2 bg-leather-medium text-white rounded-sm">{{ page_num }}</span>
+                {% else %}
+                <a href="{{ url_for('admin.messages', page=page_num, unread='true' if filter_unread else 'false') }}" class="px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-sm hover:bg-leather-cream">{{ page_num }}</a>
+                {% endif %}
+            {% else %}
+            <span class="px-4 py-2">...</span>
+            {% endif %}
+        {% endfor %}
+        {% if pagination.has_next %}
+        <a href="{{ url_for('admin.messages', page=pagination.next_num, unread='true' if filter_unread else 'false') }}" class="px-4 py-2 bg-leather-dark text-white rounded-sm hover:bg-leather-medium">Вперед</a>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+

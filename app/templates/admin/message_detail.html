@@ -1,0 +1,53 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<h1 class="text-3xl font-bold text-leather-dark mb-8">Обращение #{{ message.id }}</h1>
+
+<div class="bg-white rounded-sm shadow p-8 mb-6">
+    <div class="grid grid-cols-2 gap-6 mb-6">
+        <div>
+            <h3 class="text-sm font-medium text-gray-700 mb-1">Имя</h3>
+            <p class="text-gray-900 text-lg">{{ message.name }}</p>
+        </div>
+        <div>
+            <h3 class="text-sm font-medium text-gray-700 mb-1">Email</h3>
+            <p class="text-gray-900 text-lg"><a href="mailto:{{ message.email }}" class="text-leather-dark hover:text-leather-medium">{{ message.email }}</a></p>
+        </div>
+        {% if message.phone %}
+        <div>
+            <h3 class="text-sm font-medium text-gray-700 mb-1">Телефон</h3>
+            <p class="text-gray-900 text-lg"><a href="tel:{{ message.phone }}" class="text-leather-dark hover:text-leather-medium">{{ message.phone }}</a></p>
+        </div>
+        {% endif %}
+        <div>
+            <h3 class="text-sm font-medium text-gray-700 mb-1">Дата отправки</h3>
+            <p class="text-gray-900 text-lg">{{ message.created_at.strftime('%d.%m.%Y %H:%M') }}</p>
+        </div>
+        <div>
+            <h3 class="text-sm font-medium text-gray-700 mb-1">Статус</h3>
+            <p class="text-gray-900 text-lg">
+                {% if message.is_read %}
+                <span class="px-3 py-1 text-sm rounded bg-green-100 text-green-800">Прочитано</span>
+                {% else %}
+                <span class="px-3 py-1 text-sm rounded bg-yellow-100 text-yellow-800 font-bold">Новое</span>
+                {% endif %}
+            </p>
+        </div>
+    </div>
+    
+    <div>
+        <h3 class="text-sm font-medium text-gray-700 mb-2">Сообщение</h3>
+        <div class="bg-leather-cream p-6 rounded-sm">
+            <p class="text-gray-900 whitespace-pre-line leading-relaxed">{{ message.message }}</p>
+        </div>
+    </div>
+</div>
+
+<div class="flex gap-4">
+    <form method="POST" action="{{ url_for('admin.message_delete', message_id=message.id) }}" onsubmit="return confirm('Вы уверены, что хотите удалить это обращение?');">
+        <button type="submit" class="bg-red-600 text-white px-6 py-2 rounded-sm hover:bg-red-700">Удалить</button>
+    </form>
+    <a href="{{ url_for('admin.messages') }}" class="bg-gray-300 text-gray-700 px-6 py-2 rounded-sm hover:bg-gray-400">Назад к списку</a>
+</div>
+{% endblock %}
+
