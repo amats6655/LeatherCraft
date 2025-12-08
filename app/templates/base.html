@@ -6,6 +6,7 @@
     <title>LeatherCraft — {% block title %}Премиум кожаные изделия{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
     <script>
         tailwind.config = {
             theme: {
@@ -125,6 +126,7 @@
         </div>
     </footer>
 
+    <script src="{{ url_for('static', filename='js/style-switcher.js') }}"></script>
     {% block extra_scripts %}{% endblock %}
 </body>
 </html>
