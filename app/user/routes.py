@@ -64,27 +64,6 @@ def cart():
 
 @user.route('/cart/add/<int:product_id>', methods=['POST'])
 @login_required
-def card_add(product_id):
-    """Корзина"""
-    cart_items = session.get('cart', [])
-    products = []
-    total = Decimal(0.00)
-
-    for item in cart_items:
-        product = Product.query.get(item['product_id'])
-        if product and product.is_active:
-            quantity = item['quantity']
-            item_total = product.price * quantity
-            total += item_total
-            products.append({
-                'product': product,
-                'quantity': quantity,
-                'total': item_total
-            })
-    return render_template('user/cart.html', cart_items=products, total=total)
-
-@user.route('/cart/add/<int:product_id>', methods=['POST'])
-@login_required
 def cart_add(product_id):
     """Добавление товара в корзину"""
     product = Product.query.get_or_404(product_id)
@@ -95,7 +74,7 @@ def cart_add(product_id):
 
     quantity = int(request.form.get('quantity', 1))
 
-    if quantity > product.stok_quantity:
+    if quantity > product.stock_quantity:
         flash('Недостаточно товара на складе', 'error')
         return redirect(url_for('main.product_detail', slug=product.slug))
 

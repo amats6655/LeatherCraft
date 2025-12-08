@@ -30,6 +30,7 @@ def index():
                            featured_products=featured_products,
                            recent_posts=recent_posts)
 
+
 @main.route('/catalog')
 def catalog():
     """Каталог товаров"""
@@ -43,13 +44,13 @@ def catalog():
     if category_slug:
         category = Category.query.filter_by(slug=category_slug).first()
         if category:
-            query = query.filter(category_id=category.id)
+            query = query.filter_by(category_id=category.id)
 
     if search_query:
         query = query.filter(
             or_(
                 Product.name.ilike(f'%{search_query}%'),
-                Product.description.ilike(f'%{search_query}%'),
+                Product.description.ilike(f'%{search_query}%')
             )
         )
 
@@ -61,7 +62,8 @@ def catalog():
     return render_template('catalog.html',
                            products=products,
                            categories=categories,
-                           current_category=category,
+                           pagination=pagination,
+                           current_category=category_slug,
                            search_query=search_query)
 
 
