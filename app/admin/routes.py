@@ -2,7 +2,7 @@ from flask import render_template, request, flash, redirect, url_for, abort
 from flask_login import login_required, current_user
 from app.admin import admin
 from app import db
-from app.models import User, Product, Category, Order, BlogPost, Content, RoleEnum, OrderStatusEnum
+from app.models import User, Product, Category, Order, BlogPost, Content, RoleEnum, OrderStatusEnum, ContactMessage
 from app.utils import admin_required
 from sqlalchemy import func
 from datetime import datetime
@@ -27,7 +27,8 @@ def dashboard():
         'orders_count': Order.query.count(),
         'orders_pending': Order.query.filter_by(status=OrderStatusEnum.PENDING).count(),
         'blog_posts_count': BlogPost.query.count(),
-        'content_items': Content.query.count()
+        'content_items': Content.query.count(),
+        'messages_unread': ContactMessage.query.filter_by(is_read=False).count()
     }
 
     recent_orders = Order.query.order_by(Order.created_at.desc()).limit(10).all()
