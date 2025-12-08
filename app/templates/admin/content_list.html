@@ -1,0 +1,26 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<div class="flex justify-between items-center mb-8">
+    <h1 class="text-3xl font-bold text-leather-dark">Управление контентом</h1>
+    <a href="{{ url_for('admin.content_new') }}" class="bg-leather-dark text-white px-6 py-2 rounded-sm hover:bg-leather-medium">Добавить</a>
+</div>
+
+{% for section, items in sections.items() %}
+<div class="bg-white rounded-sm shadow p-6 mb-6">
+    <h2 class="text-xl font-bold text-leather-dark mb-4">{{ section|title }}</h2>
+    <div class="space-y-4">
+        {% for item in items %}
+        <div class="flex justify-between items-center border-b pb-4">
+            <div>
+                <div class="font-medium text-gray-900">{{ item.title or item.key }}</div>
+                <div class="text-sm text-gray-600">{{ item.key }}</div>
+            </div>
+            <a href="{{ url_for('admin.content_edit', content_id=item.id) }}" class="text-leather-dark hover:text-leather-medium">Редактировать</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endfor %}
+{% endblock %}
+
