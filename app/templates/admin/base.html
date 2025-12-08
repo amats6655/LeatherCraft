@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Админ-панель{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-100">
+    <nav class="bg-leather-dark text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-8">
+                    <a href="{{ url_for('admin.dashboard') }}" class="text-xl font-bold">Админ-панель</a>
+                    <a href="{{ url_for('main.index') }}" class="text-leather-beige hover:text-white">На сайт</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span>{{ current_user.username }}</span>
+                    <a href="{{ url_for('auth.logout') }}" class="text-leather-beige hover:text-white">Выход</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="flex">
+        <aside class="w-64 bg-white shadow-lg min-h-screen">
+            <nav class="p-4 space-y-2">
+                <a href="{{ url_for('admin.dashboard') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if request.endpoint == 'admin.dashboard' %}bg-leather-cream font-bold{% endif %}">
+                    <i class="fas fa-tachometer-alt mr-2"></i> Дашборд
+                </a>
+                <a href="{{ url_for('admin.users') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if 'users' in request.endpoint %}bg-leather-cream font-bold{% endif %}">
+                    <i class="fas fa-users mr-2"></i> Пользователи
+                </a>
+                <a href="{{ url_for('admin.content_list') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if 'content' in request.endpoint %}bg-leather-cream font-bold{% endif %}">
+                    <i class="fas fa-edit mr-2"></i> Контент (CMS)
+                </a>
+                <a href="{{ url_for('admin.categories') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if 'category' in request.endpoint %}bg-leather-cream font-bold{% endif %}">
+                    <i class="fas fa-folder mr-2"></i> Категории
+                </a>
+                <a href="{{ url_for('admin.products') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if 'product' in request.endpoint %}bg-leather-cream font-bold{% endif %}">
+                    <i class="fas fa-box mr-2"></i> Товары
+                </a>
+                <a href="{{ url_for('admin.orders') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if 'order' in request.endpoint %}bg-leather-cream font-bold{% endif %}">
+                    <i class="fas fa-shopping-cart mr-2"></i> Заказы
+                </a>
+                <a href="{{ url_for('admin.blog_posts') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if 'blog' in request.endpoint %}bg-leather-cream font-bold{% endif %}">
+                    <i class="fas fa-newspaper mr-2"></i> Блог
+                </a>
+            </nav>
+        </aside>
+
+        <main class="flex-1 p-8">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="mb-4 p-4 rounded {% if category == 'error' %}bg-red-100 text-red-700{% elif category == 'success' %}bg-green-100 text-green-700{% else %}bg-blue-100 text-blue-700{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+</body>
+</html>
+

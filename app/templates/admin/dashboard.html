@@ -1,0 +1,73 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<h1 class="text-3xl font-bold text-leather-dark mb-8">Дашборд</h1>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+    <div class="bg-white p-6 rounded-sm shadow">
+        <div class="text-3xl font-bold text-leather-dark">{{ stats.users_count }}</div>
+        <div class="text-gray-600">Пользователей</div>
+    </div>
+    <div class="bg-white p-6 rounded-sm shadow">
+        <div class="text-3xl font-bold text-leather-dark">{{ stats.products_count }}</div>
+        <div class="text-gray-600">Товаров</div>
+    </div>
+    <div class="bg-white p-6 rounded-sm shadow">
+        <div class="text-3xl font-bold text-leather-dark">{{ stats.orders_count }}</div>
+        <div class="text-gray-600">Заказов</div>
+    </div>
+    <div class="bg-white p-6 rounded-sm shadow">
+        <div class="text-3xl font-bold text-orange-600">{{ stats.orders_pending }}</div>
+        <div class="text-gray-600">Ожидают обработки</div>
+    </div>
+    <div class="bg-white p-6 rounded-sm shadow">
+        <div class="text-3xl font-bold text-leather-dark">{{ stats.blog_posts_count }}</div>
+        <div class="text-gray-600">Статей в блоге</div>
+    </div>
+    <div class="bg-white p-6 rounded-sm shadow">
+        <div class="text-3xl font-bold text-leather-dark">{{ stats.content_items }}</div>
+        <div class="text-gray-600">Элементов контента</div>
+    </div>
+</div>
+
+<div class="bg-white rounded-sm shadow p-6">
+    <h2 class="text-2xl font-bold text-leather-dark mb-4">Последние заказы</h2>
+    {% if recent_orders %}
+    <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-leather-cream">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">ID</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Пользователь</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Сумма</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Статус</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Дата</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase"></th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                {% for order in recent_orders %}
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">#{{ order.id }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ order.user.username }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ order.total_amount }} ₽</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                        <span class="px-2 py-1 text-xs rounded {% if order.status.value == 'pending' %}bg-yellow-100 text-yellow-800{% elif order.status.value == 'processing' %}bg-blue-100 text-blue-800{% elif order.status.value == 'shipped' %}bg-purple-100 text-purple-800{% elif order.status.value == 'delivered' %}bg-green-100 text-green-800{% else %}bg-red-100 text-red-800{% endif %}">
+                            {{ order.status.value }}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ order.created_at.strftime('%d.%m.%Y %H:%M') }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                        <a href="{{ url_for('admin.order_detail', order_id=order.id) }}" class="text-leather-dark hover:text-leather-medium">Подробнее</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="text-gray-600">Заказов пока нет</p>
+    {% endif %}
+</div>
+{% endblock %}
+
