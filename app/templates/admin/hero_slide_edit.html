@@ -1,0 +1,57 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<h1 class="text-3xl font-bold text-leather-dark mb-8">
+    {% if slide %}Редактирование слайда{% else %}Создание слайда{% endif %}
+</h1>
+
+<form method="POST" enctype="multipart/form-data" class="bg-white rounded-sm shadow p-8">
+    <div class="space-y-6">
+        <div>
+            <label for="title" class="block text-sm font-medium text-gray-700 mb-2">Заголовок *</label>
+            <input type="text" id="title" name="title" value="{{ slide.title if slide else '' }}" required class="w-full px-4 py-2 border border-gray-300 rounded-sm focus:outline-none focus:border-leather-dark">
+        </div>
+        
+        <div>
+            <label for="subtitle" class="block text-sm font-medium text-gray-700 mb-2">Подзаголовок</label>
+            <textarea id="subtitle" name="subtitle" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-sm focus:outline-none focus:border-leather-dark">{{ slide.subtitle if slide else '' }}</textarea>
+        </div>
+        
+        <div>
+            <label for="image_url" class="block text-sm font-medium text-gray-700 mb-2">URL изображения (или загрузите файл ниже)</label>
+            <input type="url" id="image_url" name="image_url" value="{{ slide.image_url if slide and not slide.image_file else '' }}" class="w-full px-4 py-2 border border-gray-300 rounded-sm focus:outline-none focus:border-leather-dark mb-2">
+            <input type="file" id="image_file" name="image_file" accept="image/*" class="w-full px-4 py-2 border border-gray-300 rounded-sm focus:outline-none focus:border-leather-dark">
+            {% if slide and slide.image_file %}
+            <p class="text-sm text-gray-600 mt-2">Текущее изображение: <a href="{{ slide.get_image() }}" target="_blank" class="text-leather-dark hover:text-leather-medium">{{ slide.image_file }}</a></p>
+            {% endif %}
+        </div>
+        
+        <div>
+            <label for="link_url" class="block text-sm font-medium text-gray-700 mb-2">Ссылка при клике (опционально)</label>
+            <input type="url" id="link_url" name="link_url" value="{{ slide.link_url if slide else '' }}" class="w-full px-4 py-2 border border-gray-300 rounded-sm focus:outline-none focus:border-leather-dark">
+        </div>
+        
+        <div>
+            <label for="link_text" class="block text-sm font-medium text-gray-700 mb-2">Текст кнопки</label>
+            <input type="text" id="link_text" name="link_text" value="{{ slide.link_text if slide else '' }}" placeholder="Подробнее" class="w-full px-4 py-2 border border-gray-300 rounded-sm focus:outline-none focus:border-leather-dark">
+        </div>
+        
+        <div>
+            <label for="order" class="block text-sm font-medium text-gray-700 mb-2">Порядок отображения</label>
+            <input type="number" id="order" name="order" value="{{ slide.order if slide else 0 }}" class="w-full px-4 py-2 border border-gray-300 rounded-sm focus:outline-none focus:border-leather-dark">
+            <p class="text-sm text-gray-500 mt-1">Меньшее число = выше в списке</p>
+        </div>
+        
+        <div class="flex items-center">
+            <input type="checkbox" id="is_active" name="is_active" {% if slide and slide.is_active or not slide %}checked{% endif %} class="h-4 w-4 text-leather-dark focus:ring-leather-dark border-gray-300 rounded">
+            <label for="is_active" class="ml-2 block text-sm text-gray-900">Активен</label>
+        </div>
+    </div>
+    
+    <div class="flex gap-4 mt-8">
+        <button type="submit" class="btn btn-primary px-6 py-2">Сохранить</button>
+        <a href="{{ url_for('admin.hero_slides') }}" class="btn btn-secondary px-6 py-2">Отмена</a>
+    </div>
+</form>
+{% endblock %}
+

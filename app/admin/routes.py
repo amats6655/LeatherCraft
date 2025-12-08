@@ -1,8 +1,8 @@
-from flask import render_template, request, flash, redirect, url_for, abort
+from flask import render_template, request, flash, redirect, url_for, abort, current_app
 from flask_login import login_required, current_user
 from app.admin import admin
 from app import db
-from app.models import User, Product, Category, Order, BlogPost, Content, RoleEnum, OrderStatusEnum, ContactMessage
+from app.models import User, Product, Category, Order, BlogPost, Content, RoleEnum, OrderStatusEnum, ContactMessage, HeroSlide
 from app.utils import admin_required
 from sqlalchemy import func
 from datetime import datetime

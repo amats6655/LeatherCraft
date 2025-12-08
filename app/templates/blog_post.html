@@ -7,7 +7,7 @@
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <article>
             {% if post.image_url %}
-            <img src="{{ post.image_url }}" alt="{{ post.title }}" class="w-full h-96 object-cover rounded-sm mb-8">
+            <img src="{% if post.image_file %}{{ url_for('static', filename='uploads/' + post.image_file) }}{% else %}{{ post.image_url or 'https://placehold.co/600x400' }}{% endif %}" alt="{{ post.title }}" class="w-full h-96 object-cover rounded-sm mb-8">
             {% endif %}
 
             <h1 class="text-3xl sm:text-4xl font-bold text-leather-dark mb-4">{{ post.title }}</h1>

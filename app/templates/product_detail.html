@@ -8,7 +8,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div>
                 <div class="aspect-square bg-gray-100 overflow-hidden rounded-sm">
-                    <img src="{{ product.image_url or 'https://placehold.co/600x400' }}" alt="{{ product.name }}" class="w-full h-full object-cover">
+                    <img src="{% if product.image_file %}{{ url_for('static', filename='uploads/' + product.image_file) }}{% else %}{{ product.image_url or 'https://placehold.co/600x400' }}{% endif %}" alt="{{ product.name }}" class="w-full h-full object-cover">
                 </div>
             </div>
             <div>
