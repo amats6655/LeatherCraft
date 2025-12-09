@@ -59,11 +59,11 @@ def edit_user(user_id):
     user = User.query.get_or_404(user_id)
 
     if request.method == 'POST':
-        user.username = request.form.get('username')
-        user.email = request.form.get('email')
-        user.full_name = request.form.get('full_name')
-        user.phone = request.form.get('phone')
-        user.address = request.form.get('address')
+        user.username = request.form.get('username', '').strip()
+        user.email = request.form.get('email', '').strip()
+        user.full_name = request.form.get('full_name', '').strip() if request.form.get('full_name') else None
+        user.phone = request.form.get('phone', '').strip() if request.form.get('phone') else None
+        user.address = request.form.get('address', '').strip() if request.form.get('address') else None
         user.role = RoleEnum(request.form.get('role'))
         user.is_active = request.form.get('is_active') == 'on'
 
@@ -108,11 +108,8 @@ def delete_user(user_id):
 @admin_required
 def content_list():
     """Список контента"""
-    # Исключаем секции, которые управляются отдельно
-    from sqlalchemy import not_
-    excluded_sections = ['hero', 'about', 'contact']
-    content_items = Content.query.filter(not_(Content.section.in_(excluded_sections))).order_by(Content.section,
-                                                                                                Content.key).all()
+    # Получаем все элементы контента, отсортированные по секциям и ключам
+    content_items = Content.query.order_by(Content.section, Content.key).all()
 
     # Группировка по секциям
     sections = {}

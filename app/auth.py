@@ -13,7 +13,7 @@ def login():
         return redirect(url_for('main.index'))
 
     if request.method == 'POST':
-        username = request.form.get('username')
+        username = request.form.get('username', '').strip()
         password = request.form.get('password')
 
         if not username or not password:
@@ -55,12 +55,12 @@ def register():
         return redirect(url_for('main.index'))
 
     if request.method == 'POST':
-        username = request.form.get('username')
-        email = request.form.get('email')
+        username = request.form.get('username', '').strip()
+        email = request.form.get('email', '').strip()
         password = request.form.get('password')
         password_confirm = request.form.get('password_confirm')
-        full_name = request.form.get('full_name')
-        phone = request.form.get('phone')
+        full_name = request.form.get('full_name', '').strip() if request.form.get('full_name') else ''
+        phone = request.form.get('phone', '').strip() if request.form.get('phone') else ''
 
         # Валидация
         if not all([username, email, password, password_confirm]):
