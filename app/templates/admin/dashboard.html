@@ -4,10 +4,12 @@
 <h1 class="text-3xl font-bold text-leather-dark mb-8">Дашборд</h1>
 
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+    {% if stats.users_count is not none %}
     <div class="bg-white p-6 rounded-sm shadow">
         <div class="text-3xl font-bold text-leather-dark">{{ stats.users_count }}</div>
         <div class="text-gray-600">Пользователей</div>
     </div>
+    {% endif %}
     <div class="bg-white p-6 rounded-sm shadow">
         <div class="text-3xl font-bold text-leather-dark">{{ stats.products_count }}</div>
         <div class="text-gray-600">Товаров</div>
@@ -24,10 +26,12 @@
         <div class="text-3xl font-bold text-leather-dark">{{ stats.blog_posts_count }}</div>
         <div class="text-gray-600">Статей в блоге</div>
     </div>
+    {% if stats.content_items is not none %}
     <div class="bg-white p-6 rounded-sm shadow">
         <div class="text-3xl font-bold text-leather-dark">{{ stats.content_items }}</div>
         <div class="text-gray-600">Элементов контента</div>
     </div>
+    {% endif %}
     <div class="bg-white p-6 rounded-sm shadow">
         <div class="text-3xl font-bold text-orange-600">{{ stats.messages_unread }}</div>
         <div class="text-gray-600">Новых обращений</div>

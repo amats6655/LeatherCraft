@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Админ-панель{% endblock %}</title>
+    <title>{% block title %}Админ-панель — LeatherCraft{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
@@ -42,38 +42,40 @@
     <div class="flex">
         <aside class="w-64 bg-white shadow-lg min-h-screen">
             <nav class="p-4 space-y-2">
-                <a href="{{ url_for('admin.dashboard') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if request.endpoint == 'admin.dashboard' %}bg-leather-cream font-bold{% endif %}">
+                <a href="{{ url_for('admin.dashboard') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if request.endpoint == 'admin.dashboard' %}bg-leather-cream font-bold{% endif %}" style="border-left: 3px solid {% if request.endpoint == 'admin.dashboard' %}#3E2723{% else %}transparent{% endif %};">
                     <i class="fas fa-tachometer-alt mr-2"></i> Дашборд
                 </a>
-                <a href="{{ url_for('admin.users') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if 'users' in request.endpoint %}bg-leather-cream font-bold{% endif %}">
+                {% if current_user.role.value == 'admin' %}
+                <a href="{{ url_for('admin.users') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if 'users' in request.endpoint %}bg-leather-cream font-bold{% endif %}" style="border-left: 3px solid {% if 'users' in request.endpoint %}#3E2723{% else %}transparent{% endif %};">
                     <i class="fas fa-users mr-2"></i> Пользователи
                 </a>
-                <a href="{{ url_for('admin.content_list') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if 'content' in request.endpoint and 'about' not in request.endpoint and 'contact' not in request.endpoint %}bg-leather-cream font-bold{% endif %}">
+                <a href="{{ url_for('admin.content_list') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if 'content' in request.endpoint and 'about' not in request.endpoint and 'contact' not in request.endpoint %}bg-leather-cream font-bold{% endif %}" style="border-left: 3px solid {% if 'content' in request.endpoint and 'about' not in request.endpoint and 'contact' not in request.endpoint %}#3E2723{% else %}transparent{% endif %};">
                     <i class="fas fa-edit mr-2"></i> Контент (CMS)
                 </a>
-                <a href="{{ url_for('admin.about_edit') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if 'about' in request.endpoint %}bg-leather-cream font-bold{% endif %}">
+                <a href="{{ url_for('admin.about_edit') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if 'about' in request.endpoint %}bg-leather-cream font-bold{% endif %}" style="border-left: 3px solid {% if 'about' in request.endpoint %}#3E2723{% else %}transparent{% endif %};">
                     <i class="fas fa-info-circle mr-2"></i> Страница About
                 </a>
-                <a href="{{ url_for('admin.contact_edit') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if 'contact' in request.endpoint %}bg-leather-cream font-bold{% endif %}">
+                <a href="{{ url_for('admin.contact_edit') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if 'contact' in request.endpoint %}bg-leather-cream font-bold{% endif %}" style="border-left: 3px solid {% if 'contact' in request.endpoint %}#3E2723{% else %}transparent{% endif %};">
                     <i class="fas fa-address-book mr-2"></i> Страница Contact
                 </a>
-                <a href="{{ url_for('admin.categories') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if 'category' in request.endpoint %}bg-leather-cream font-bold{% endif %}">
+                <a href="{{ url_for('admin.categories') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if 'category' in request.endpoint %}bg-leather-cream font-bold{% endif %}" style="border-left: 3px solid {% if 'category' in request.endpoint %}#3E2723{% else %}transparent{% endif %};">
                     <i class="fas fa-folder mr-2"></i> Категории
                 </a>
-                <a href="{{ url_for('admin.products') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if 'product' in request.endpoint %}bg-leather-cream font-bold{% endif %}">
+                <a href="{{ url_for('admin.hero_slides') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if 'hero' in request.endpoint %}bg-leather-cream font-bold{% endif %}" style="border-left: 3px solid {% if 'hero' in request.endpoint %}#3E2723{% else %}transparent{% endif %};">
+                    <i class="fas fa-images mr-2"></i> Слайды Hero
+                </a>
+                {% endif %}
+                <a href="{{ url_for('admin.products') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if 'product' in request.endpoint %}bg-leather-cream font-bold{% endif %}" style="border-left: 3px solid {% if 'product' in request.endpoint %}#3E2723{% else %}transparent{% endif %};">
                     <i class="fas fa-box mr-2"></i> Товары
                 </a>
-                <a href="{{ url_for('admin.orders') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if 'order' in request.endpoint %}bg-leather-cream font-bold{% endif %}">
+                <a href="{{ url_for('admin.orders') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if 'order' in request.endpoint %}bg-leather-cream font-bold{% endif %}" style="border-left: 3px solid {% if 'order' in request.endpoint %}#3E2723{% else %}transparent{% endif %};">
                     <i class="fas fa-shopping-cart mr-2"></i> Заказы
                 </a>
-                <a href="{{ url_for('admin.blog_posts') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if 'blog' in request.endpoint %}bg-leather-cream font-bold{% endif %}">
+                <a href="{{ url_for('admin.blog_posts') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if 'blog' in request.endpoint %}bg-leather-cream font-bold{% endif %}" style="border-left: 3px solid {% if 'blog' in request.endpoint %}#3E2723{% else %}transparent{% endif %};">
                     <i class="fas fa-newspaper mr-2"></i> Блог
                 </a>
-                <a href="{{ url_for('admin.messages') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if 'message' in request.endpoint %}bg-leather-cream font-bold{% endif %}">
+                <a href="{{ url_for('admin.messages') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if 'message' in request.endpoint %}bg-leather-cream font-bold{% endif %}" style="border-left: 3px solid {% if 'message' in request.endpoint %}#3E2723{% else %}transparent{% endif %};">
                     <i class="fas fa-envelope mr-2"></i> Обращения
-                </a>
-                <a href="{{ url_for('admin.hero_slides') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if 'hero' in request.endpoint %}bg-leather-cream font-bold{% endif %}">
-                    <i class="fas fa-images mr-2"></i> Слайды Hero
                 </a>
             </nav>
         </aside>

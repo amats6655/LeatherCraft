@@ -3,10 +3,6 @@ from flask_login import login_user, logout_user, login_required, current_user
 from app import db, bcrypt
 from app.models import User, RoleEnum
 from app.utils import admin_required
-import re
-
-email_pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
-username_pattern = r'^[A-Za-z0-9_]+$'
 
 auth = Blueprint('auth', __name__)
 
@@ -17,7 +13,7 @@ def login():
         return redirect(url_for('main.index'))
 
     if request.method == 'POST':
-        username = request.form.get('username', '').strip()
+        username = request.form.get('username')
         password = request.form.get('password')
 
         if not username or not password:
@@ -59,38 +55,26 @@ def register():
         return redirect(url_for('main.index'))
 
     if request.method == 'POST':
-        username = request.form.get('username', '').strip()
-        email = request.form.get('email', '').strip()
+        username = request.form.get('username')
+        email = request.form.get('email')
         password = request.form.get('password')
         password_confirm = request.form.get('password_confirm')
-        full_name = request.form.get('full_name', '').strip() if request.form.get('full_name') else ''
-        phone = request.form.get('phone', '').strip() if request.form.get('phone') else ''
+        full_name = request.form.get('full_name')
+        phone = request.form.get('phone')
 
-        # Базовая проверка обязательных полей
+        # Валидация
         if not all([username, email, password, password_confirm]):
             flash('Пожалуйста, заполните все обязательные поля', 'error')
             return render_template('auth/register.html')
 
-        # Имя пользователя
-        if not re.match(username_pattern, username):
-            flash('Имя пользователя может содержать только латинские буквы, цифры и нижнее подчёркивание', 'error')
-            return render_template('auth/register.html')
-
-        # Email проверка
-        if not re.match(email_pattern, email):
-            flash('Введите корректный адрес электронной почты', 'error')
-            return render_template('auth/register.html')
-
-        # Пароль
         if password != password_confirm:
             flash('Пароли не совпадают', 'error')
             return render_template('auth/register.html')
 
-        if len(password) < 8:
-            flash('Пароль должен содержать минимум 8 символов', 'error')
+        if len(password) < 6:
+            flash('Пароль должен содержать минимум 6 символов', 'error')
             return render_template('auth/register.html')
 
-        # Проверка уникальности
         if User.query.filter_by(username=username).first():
             flash('Пользователь с таким именем уже существует', 'error')
             return render_template('auth/register.html')
@@ -119,3 +103,4 @@ def register():
             flash('Произошла ошибка при регистрации', 'error')
 
     return render_template('auth/register.html')
+

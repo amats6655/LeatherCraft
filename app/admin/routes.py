@@ -4,7 +4,7 @@ from app.admin import admin
 from app import db
 from app.models import User, Product, Category, Order, BlogPost, Content, ContactMessage, HeroSlide, RoleEnum, \
     OrderStatusEnum
-from app.utils import admin_required
+from app.utils import admin_required, manager_required
 from sqlalchemy import func
 from datetime import datetime
 import re
@@ -20,7 +20,7 @@ def slugify(text):
 
 
 @admin.route('/')
-@admin_required
+@manager_required
 def dashboard():
     """Главная страница админ-панели"""
     stats = {
@@ -111,7 +111,9 @@ def content_list():
     # Исключаем секции, которые управляются отдельно
     from sqlalchemy import not_
     excluded_sections = ['hero', 'about', 'contact']
-    content_items = Content.query.filter(not_(Content.section.in_(excluded_sections))).order_by(Content.section, Content.key).all()
+    content_items = Content.query.filter(not_(Content.section.in_(excluded_sections))).order_by(Content.section,
+                                                                                                Content.key).all()
+
     # Группировка по секциям
     sections = {}
     for item in content_items:
@@ -282,7 +284,7 @@ def category_delete(category_id):
 
 # Управление товарами
 @admin.route('/products')
-@admin_required
+@manager_required
 def products():
     """Список товаров"""
     page = request.args.get('page', 1, type=int)
@@ -295,7 +297,7 @@ def products():
 
 
 @admin.route('/products/new', methods=['GET', 'POST'])
-@admin_required
+@manager_required
 def product_new():
     """Создание товара"""
     categories = Category.query.all()
@@ -352,7 +354,7 @@ def product_new():
 
 
 @admin.route('/products/<int:product_id>/edit', methods=['GET', 'POST'])
-@admin_required
+@manager_required
 def product_edit(product_id):
     """Редактирование товара"""
     product = Product.query.get_or_404(product_id)
@@ -383,7 +385,7 @@ def product_edit(product_id):
 
         # Если указан URL и нет файла, используем URL
         image_url = request.form.get('image_url', '').strip()
-        if image_url and not (hasattr(product, 'image_file') and product.image_file):
+        if image_url and not getattr(product, 'image_file', None):
             product.image_url = image_url
 
         try:
@@ -398,7 +400,7 @@ def product_edit(product_id):
 
 
 @admin.route('/products/<int:product_id>/delete', methods=['POST'])
-@admin_required
+@manager_required
 def product_delete(product_id):
     """Удаление товара"""
     product = Product.query.get_or_404(product_id)
@@ -416,7 +418,7 @@ def product_delete(product_id):
 
 # Управление заказами
 @admin.route('/orders')
-@admin_required
+@manager_required
 def orders():
     """Список заказов"""
     page = request.args.get('page', 1, type=int)
@@ -434,7 +436,7 @@ def orders():
 
 
 @admin.route('/orders/<int:order_id>')
-@admin_required
+@manager_required
 def order_detail(order_id):
     """Детали заказа"""
     order = Order.query.get_or_404(order_id)
@@ -442,7 +444,7 @@ def order_detail(order_id):
 
 
 @admin.route('/orders/<int:order_id>/update_status', methods=['POST'])
-@admin_required
+@manager_required
 def order_update_status(order_id):
     """Обновление статуса заказа"""
     order = Order.query.get_or_404(order_id)
@@ -461,7 +463,7 @@ def order_update_status(order_id):
 
 # Управление блогом
 @admin.route('/blog')
-@admin_required
+@manager_required
 def blog_posts():
     """Список статей блога"""
     page = request.args.get('page', 1, type=int)
@@ -475,7 +477,7 @@ def blog_posts():
 
 
 @admin.route('/blog/new', methods=['GET', 'POST'])
-@admin_required
+@manager_required
 def blog_post_new():
     """Создание статьи"""
     if request.method == 'POST':
@@ -508,7 +510,7 @@ def blog_post_new():
             author_id=current_user.id,
             is_published=is_published
         )
-        # Устанавливаем image_file отдельно, если он был загружен
+        # Устанавливаем image_file отдельно после создания объекта
         if image_file:
             post.image_file = image_file
 
@@ -528,7 +530,7 @@ def blog_post_new():
 
 
 @admin.route('/blog/<int:post_id>/edit', methods=['GET', 'POST'])
-@admin_required
+@manager_required
 def blog_post_edit(post_id):
     """Редактирование статьи"""
     post = BlogPost.query.get_or_404(post_id)
@@ -538,9 +540,26 @@ def blog_post_edit(post_id):
         post.slug = request.form.get('slug') or slugify(post.title)
         post.content = request.form.get('content')
         post.excerpt = request.form.get('excerpt')
-        post.image_url = request.form.get('image_url')
         was_published = post.is_published
         post.is_published = request.form.get('is_published') == 'on'
+
+        # Обработка загрузки изображения
+        if 'image_file' in request.files:
+            file = request.files['image_file']
+            if file and file.filename:
+                from app.utils import save_uploaded_file
+                # Удаляем старый файл, если есть
+                if post.image_file:
+                    old_path = os.path.join(current_app.root_path, 'static', 'uploads', post.image_file)
+                    if os.path.exists(old_path):
+                        os.remove(old_path)
+                post.image_file = save_uploaded_file(file)
+                post.image_url = None  # Очищаем URL, если загружен файл
+
+        # Если указан URL и нет файла, используем URL
+        image_url = request.form.get('image_url', '').strip()
+        if image_url and not post.image_file:
+            post.image_url = image_url
 
         if post.is_published and not was_published:
             post.published_at = datetime.utcnow()
@@ -557,7 +576,7 @@ def blog_post_edit(post_id):
 
 
 @admin.route('/blog/<int:post_id>/delete', methods=['POST'])
-@admin_required
+@manager_required
 def blog_post_delete(post_id):
     """Удаление статьи"""
     post = BlogPost.query.get_or_404(post_id)
@@ -571,3 +590,4 @@ def blog_post_delete(post_id):
         flash('Ошибка при удалении статьи', 'error')
 
     return redirect(url_for('admin.blog_posts'))
+

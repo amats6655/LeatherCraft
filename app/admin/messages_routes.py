@@ -3,13 +3,13 @@ from flask_login import login_required, current_user
 from app.admin import admin
 from app import db
 from app.models import ContactMessage, HeroSlide
-from app.utils import admin_required
+from app.utils import admin_required, manager_required
 import os
 
 
 # Управление обращениями
 @admin.route('/messages')
-@admin_required
+@manager_required
 def messages():
     """Список обращений"""
     page = request.args.get('page', 1, type=int)
@@ -29,7 +29,7 @@ def messages():
 
 
 @admin.route('/messages/<int:message_id>')
-@admin_required
+@manager_required
 def message_detail(message_id):
     """Детали обращения"""
     message = ContactMessage.query.get_or_404(message_id)
@@ -43,7 +43,7 @@ def message_detail(message_id):
 
 
 @admin.route('/messages/<int:message_id>/delete', methods=['POST'])
-@admin_required
+@manager_required
 def message_delete(message_id):
     """Удаление обращения"""
     message = ContactMessage.query.get_or_404(message_id)
