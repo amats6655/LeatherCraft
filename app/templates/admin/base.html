@@ -32,8 +32,14 @@
                 <a href="{{ url_for('admin.users') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if 'users' in request.endpoint %}bg-leather-cream font-bold{% endif %}">
                     <i class="fas fa-users mr-2"></i> Пользователи
                 </a>
-                <a href="{{ url_for('admin.content_list') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if 'content' in request.endpoint %}bg-leather-cream font-bold{% endif %}">
+                <a href="{{ url_for('admin.content_list') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if 'content' in request.endpoint and 'about' not in request.endpoint and 'contact' not in request.endpoint %}bg-leather-cream font-bold{% endif %}">
                     <i class="fas fa-edit mr-2"></i> Контент (CMS)
+                </a>
+                <a href="{{ url_for('admin.about_edit') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if 'about' in request.endpoint %}bg-leather-cream font-bold{% endif %}">
+                    <i class="fas fa-info-circle mr-2"></i> Страница About
+                </a>
+                <a href="{{ url_for('admin.contact_edit') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if 'contact' in request.endpoint %}bg-leather-cream font-bold{% endif %}">
+                    <i class="fas fa-address-book mr-2"></i> Страница Contact
                 </a>
                 <a href="{{ url_for('admin.categories') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if 'category' in request.endpoint %}bg-leather-cream font-bold{% endif %}">
                     <i class="fas fa-folder mr-2"></i> Категории

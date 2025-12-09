@@ -108,8 +108,10 @@ def delete_user(user_id):
 @admin_required
 def content_list():
     """Список контента"""
-    content_items = Content.query.order_by(Content.section, Content.key).all()
-
+    # Исключаем секции, которые управляются отдельно
+    from sqlalchemy import not_
+    excluded_sections = ['hero', 'about', 'contact']
+    content_items = Content.query.filter(not_(Content.section.in_(excluded_sections))).order_by(Content.section, Content.key).all()
     # Группировка по секциям
     sections = {}
     for item in content_items:

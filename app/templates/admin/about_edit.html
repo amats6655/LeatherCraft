@@ -1,0 +1,66 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<h1 class="text-3xl font-bold text-leather-dark mb-8">Редактирование страницы About</h1>
+
+<div class="bg-white rounded-sm shadow p-8">
+    <form method="POST" enctype="multipart/form-data" class="space-y-8">
+        <!-- Текст о компании -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Текст о компании</label>
+            <textarea name="content" rows="6" class="w-full px-4 py-2 border border-gray-300 rounded-sm focus:outline-none focus:border-leather-dark">{{ about_content.content if about_content else '' }}</textarea>
+        </div>
+        
+        <!-- Статистика -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Лет опыта</label>
+                <input type="text" name="stats_years" value="{{ stats_years.content if stats_years else '' }}" class="w-full px-4 py-2 border border-gray-300 rounded-sm focus:outline-none focus:border-leather-dark">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Количество мастеров</label>
+                <input type="text" name="stats_masters" value="{{ stats_masters.content if stats_masters else '' }}" class="w-full px-4 py-2 border border-gray-300 rounded-sm focus:outline-none focus:border-leather-dark">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Количество стран</label>
+                <input type="text" name="stats_countries" value="{{ stats_countries.content if stats_countries else '' }}" class="w-full px-4 py-2 border border-gray-300 rounded-sm focus:outline-none focus:border-leather-dark">
+            </div>
+        </div>
+        
+        <!-- Изображения -->
+        <div>
+            <h2 class="text-xl font-bold text-leather-dark mb-4">Изображения (4 шт.)</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {% for i in range(1, 5) %}
+                <div class="border border-gray-300 rounded-sm p-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Изображение {{ i }}</label>
+                    
+                    {% if about_images[i] and about_images[i].content %}
+                        {% if about_images[i].content.startswith('http') %}
+                            <img src="{{ about_images[i].content }}" alt="Изображение {{ i }}" class="w-full h-32 object-cover mb-2 rounded">
+                        {% else %}
+                            <img src="{{ url_for('static', filename='uploads/' + about_images[i].content) }}" alt="Изображение {{ i }}" class="w-full h-32 object-cover mb-2 rounded">
+                        {% endif %}
+                    {% else %}
+                        <div class="w-full h-32 bg-gray-200 flex items-center justify-center mb-2 rounded">
+                            <span class="text-gray-400">Нет изображения</span>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="space-y-2">
+                        <input type="file" name="image_file_{{ i }}" accept="image/*" class="w-full px-4 py-2 border border-gray-300 rounded-sm focus:outline-none focus:border-leather-dark">
+                        <input type="url" name="image_url_{{ i }}" value="{% if about_images[i] and about_images[i].content and about_images[i].content.startswith('http') %}{{ about_images[i].content }}{% endif %}" placeholder="Или укажите URL изображения" class="w-full px-4 py-2 border border-gray-300 rounded-sm focus:outline-none focus:border-leather-dark">
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="flex gap-4">
+            <button type="submit" class="btn btn-primary px-6 py-2">Сохранить</button>
+            <a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary px-6 py-2">Отмена</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
