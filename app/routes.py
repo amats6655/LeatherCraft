@@ -1,6 +1,5 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, abort
 from app.models import Product, Category, BlogPost, Content, HeroSlide
-from app.utils import get_image_url
 from app import db
 from sqlalchemy import or_, func
 

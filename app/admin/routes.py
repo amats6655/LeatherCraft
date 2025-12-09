@@ -2,11 +2,13 @@ from flask import render_template, request, flash, redirect, url_for, abort, cur
 from flask_login import login_required, current_user
 from app.admin import admin
 from app import db
-from app.models import User, Product, Category, Order, BlogPost, Content, RoleEnum, OrderStatusEnum, ContactMessage, HeroSlide
+from app.models import User, Product, Category, Order, BlogPost, Content, ContactMessage, HeroSlide, RoleEnum, \
+    OrderStatusEnum
 from app.utils import admin_required
 from sqlalchemy import func
 from datetime import datetime
 import re
+import os
 
 
 def slugify(text):
@@ -526,4 +528,3 @@ def blog_post_delete(post_id):
         flash('Ошибка при удалении статьи', 'error')
 
     return redirect(url_for('admin.blog_posts'))
-

@@ -50,6 +50,9 @@
                 <a href="{{ url_for('admin.messages') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if 'message' in request.endpoint %}bg-leather-cream font-bold{% endif %}">
                     <i class="fas fa-envelope mr-2"></i> Обращения
                 </a>
+                <a href="{{ url_for('admin.hero_slides') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if 'hero' in request.endpoint %}bg-leather-cream font-bold{% endif %}">
+                    <i class="fas fa-images mr-2"></i> Слайды Hero
+                </a>
             </nav>
         </aside>
 

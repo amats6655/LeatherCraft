@@ -25,7 +25,7 @@
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex items-center">
                                 <div class="flex-shrink-0 h-16 w-16">
-                                    <img src="{% if item.product.image_file %}{{ url_for('static', filename='uploads/' + item.product.image_file) }}{% else %}{{ item.product.image_url or 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&q=80' }}{% endif %}" alt="{{ item.product.name }}" class="h-16 w-16 object-cover rounded">
+                                    <img src="{% if item.product.image_file %}{{ url_for('static', filename='uploads/' + item.product.image_file) }}{% else %}{{ item.product.image_url or 'https://placehold.co/600x400' }}{% endif %}" alt="{{ item.product.name }}" class="h-16 w-16 object-cover rounded">
                                 </div>
                                 <div class="ml-4">
                                     <a href="{{ url_for('main.product_detail', slug=item.product.slug) }}" class="text-sm font-medium text-leather-dark hover:text-leather-medium">{{ item.product.name }}</a>
