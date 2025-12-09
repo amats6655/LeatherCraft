@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Ошибка сервера — LeatherCraft{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-leather-cream py-12 px-4">
+    <div class="text-center max-w-2xl mx-auto">
+        <h1 class="text-9xl font-bold text-leather-dark mb-4" style="font-size: 8rem; line-height: 1;">500</h1>
+        <h2 class="text-3xl sm:text-4xl font-bold text-leather-dark mb-4">Ошибка сервера</h2>
+        <p class="text-xl text-gray-600 mb-8 leading-relaxed">Произошла внутренняя ошибка сервера. Мы уже работаем над её устранением.</p>
+        <div class="space-y-4">
+            <a href="{{ url_for('main.index') }}" class="btn btn-primary px-8 py-4 text-lg inline-block">
+                Вернуться на главную
+            </a>
+            <div class="mt-4">
+                <a href="{{ url_for('main.catalog') }}" class="text-leather-dark hover:text-leather-medium text-lg mr-4">Каталог</a>
+                <a href="{{ url_for('main.blog') }}" class="text-leather-dark hover:text-leather-medium text-lg mr-4">Блог</a>
+                <a href="{{ url_for('main.sitemap') }}" class="text-leather-dark hover:text-leather-medium text-lg">Карта сайта</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
