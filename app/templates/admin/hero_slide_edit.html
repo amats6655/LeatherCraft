@@ -22,7 +22,7 @@
             <input type="url" id="image_url" name="image_url" value="{{ slide.image_url if slide and not slide.image_file else '' }}" class="w-full px-4 py-2 border border-gray-300 rounded-sm focus:outline-none focus:border-leather-dark mb-2">
             <input type="file" id="image_file" name="image_file" accept="image/*" class="w-full px-4 py-2 border border-gray-300 rounded-sm focus:outline-none focus:border-leather-dark">
             {% if slide and slide.image_file %}
-            <p class="text-sm text-gray-600 mt-2">Текущее изображение: <a href="{{ slide.get_image() }}" target="_blank" class="text-leather-dark hover:text-leather-medium">{{ slide.image_file }}</a></p>
+            <p class="text-sm text-gray-600 mt-2">Текущее изображение: <a href="{% if slide.image_file %}{{ url_for('static', filename='uploads/' + slide.image_file) }}{% else %}{{ slide.image_url or '#' }}{% endif %}" target="_blank" class="text-leather-dark hover:text-leather-medium">{{ slide.image_file or slide.image_url or 'Нет изображения' }}</a></p>
             {% endif %}
         </div>
         
