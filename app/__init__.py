@@ -39,4 +39,21 @@ def create_app():
     app.register_blueprint(admin, url_prefix='/admin')
     app.register_blueprint(user, url_prefix='/user')
 
+    # Регистрация обработчиков ошибок на уровне приложения
+    @app.errorhandler(403)
+    def forbidden_error(error):
+        from flask import render_template
+        return render_template('403.html'), 403
+
+    @app.errorhandler(404)
+    def not_found_error(error):
+        from flask import render_template
+        return render_template('404.html'), 404
+
+    @app.errorhandler(500)
+    def internal_error(error):
+        from flask import render_template
+        db.session.rollback()
+        return render_template('500.html'), 500
+
     return app

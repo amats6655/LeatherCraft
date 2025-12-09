@@ -12,7 +12,10 @@ def admin_required(f):
 
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if not current_user.is_authenticated or current_user.role != RoleEnum.ADMIN:
+        if not current_user.is_authenticated:
+            from flask import redirect, url_for
+            return redirect(url_for('auth.login'))
+        if current_user.role != RoleEnum.ADMIN:
             abort(403)
         return f(*args, **kwargs)
 
@@ -25,7 +28,8 @@ def manager_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if not current_user.is_authenticated:
-            abort(403)
+            from flask import redirect, url_for
+            return redirect(url_for('auth.login'))
         if current_user.role not in [RoleEnum.ADMIN, RoleEnum.MANAGER]:
             abort(403)
         return f(*args, **kwargs)

@@ -1,0 +1,348 @@
+/* ============================================
+   СТИЛИ АДМИН-ПАНЕЛИ
+   Использует цветовую схему основного сайта
+   ============================================ */
+
+/* Цвета из основной темы */
+:root {
+    --admin-leather-dark: #3E2723;
+    --admin-leather-medium: #6D4C41;
+    --admin-leather-light: #A1887F;
+    --admin-leather-cream: #EFEBE9;
+    --admin-leather-beige: #D7CCC8;
+}
+
+/* Основной контейнер */
+body {
+    background-color: #f5f5f5;
+}
+
+/* Навигация - исправляем контрастность */
+nav.bg-leather-dark {
+    background-color: var(--admin-leather-dark) !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+nav.bg-leather-dark a,
+nav.bg-leather-dark span {
+    color: #ffffff !important;
+}
+
+nav.bg-leather-dark .text-leather-beige {
+    color: #D7CCC8 !important;
+}
+
+nav.bg-leather-dark a:hover {
+    color: #ffffff !important;
+    opacity: 0.9;
+}
+
+/* Боковая панель */
+aside {
+    background-color: #ffffff;
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.05);
+}
+
+aside nav a {
+    color: #374151;
+    transition: all 0.2s ease;
+    border-left: 3px solid transparent;
+}
+
+aside nav a:hover {
+    background-color: var(--admin-leather-cream);
+    color: var(--admin-leather-dark);
+    border-left-color: var(--admin-leather-medium);
+}
+
+aside nav a.bg-leather-cream {
+    background-color: var(--admin-leather-cream) !important;
+    color: var(--admin-leather-dark) !important;
+    font-weight: 600;
+    border-left-color: var(--admin-leather-dark);
+}
+
+/* Заголовки */
+h1, h2, h3 {
+    color: var(--admin-leather-dark);
+}
+
+/* Карточки и блоки */
+.bg-white {
+    background-color: #ffffff;
+    border-radius: 0.375rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Формы - улучшенный дизайн */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="password"],
+input[type="number"],
+input[type="url"],
+input[type="file"],
+textarea,
+select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: #1f2937;
+    background-color: #ffffff;
+    border: 1.5px solid #d1d5db;
+    border-radius: 0.375rem;
+    transition: all 0.2s ease;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    border-color: var(--admin-leather-medium);
+    box-shadow: 0 0 0 3px rgba(109, 76, 65, 0.1);
+    background-color: #ffffff;
+}
+
+input:hover,
+textarea:hover,
+select:hover {
+    border-color: var(--admin-leather-light);
+}
+
+input[readonly] {
+    background-color: #f9fafb;
+    cursor: not-allowed;
+}
+
+/* Лейблы */
+label {
+    color: #374151;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+/* Кнопки - улучшенный дизайн */
+.btn,
+button[type="submit"],
+button[type="button"] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    line-height: 1.5;
+    text-align: center;
+    text-decoration: none;
+    border: 1.5px solid transparent;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-height: 44px;
+}
+
+.btn-primary,
+button[type="submit"]:not(.btn-secondary) {
+    background-color: var(--admin-leather-dark);
+    color: #ffffff;
+    border-color: var(--admin-leather-dark);
+}
+
+.btn-primary:hover,
+button[type="submit"]:not(.btn-secondary):hover {
+    background-color: var(--admin-leather-medium);
+    border-color: var(--admin-leather-medium);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(62, 39, 35, 0.2);
+}
+
+.btn-secondary {
+    background-color: #ffffff;
+    color: var(--admin-leather-dark);
+    border-color: #d1d5db;
+}
+
+.btn-secondary:hover {
+    background-color: var(--admin-leather-cream);
+    border-color: var(--admin-leather-medium);
+    color: var(--admin-leather-dark);
+}
+
+/* Таблицы - улучшенный дизайн */
+table {
+    background-color: #ffffff;
+    border-radius: 0.375rem;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+thead {
+    background-color: var(--admin-leather-cream);
+}
+
+thead th {
+    color: var(--admin-leather-dark);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    padding: 1rem;
+}
+
+tbody tr {
+    transition: background-color 0.15s ease;
+}
+
+tbody tr:hover {
+    background-color: #f9fafb;
+}
+
+tbody td {
+    padding: 1rem;
+    color: #374151;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+/* Сообщения (flash) */
+.mb-4.p-4.rounded {
+    border-radius: 0.375rem;
+    border-left: 4px solid;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.bg-red-100 {
+    background-color: #fee2e2;
+    border-left-color: #dc2626;
+    color: #991b1b;
+}
+
+.bg-green-100 {
+    background-color: #d1fae5;
+    border-left-color: #059669;
+    color: #065f46;
+}
+
+.bg-blue-100 {
+    background-color: #dbeafe;
+    border-left-color: #2563eb;
+    color: #1e40af;
+}
+
+/* Карточки статистики на дашборде */
+.grid > div.bg-white {
+    transition: all 0.2s ease;
+    border-top: 3px solid var(--admin-leather-medium);
+}
+
+.grid > div.bg-white:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.grid > div.bg-white .text-3xl {
+    color: var(--admin-leather-dark);
+}
+
+.grid > div.bg-white .text-orange-600 {
+    color: #ea580c;
+}
+
+/* Формы редактирования */
+.space-y-8 > div {
+    margin-bottom: 2rem;
+}
+
+.space-y-6 > div {
+    margin-bottom: 1.5rem;
+}
+
+/* Изображения в формах */
+img {
+    border-radius: 0.375rem;
+    border: 2px solid #e5e7eb;
+}
+
+/* Плейсхолдеры для изображений */
+.bg-gray-200 {
+    background-color: #e5e7eb;
+    border: 2px dashed #9ca3af;
+}
+
+/* Улучшенные отступы */
+.p-8 {
+    padding: 2rem;
+}
+
+.p-6 {
+    padding: 1.5rem;
+}
+
+.p-4 {
+    padding: 1rem;
+}
+
+/* Улучшенные тени */
+.shadow {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.shadow-lg {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+/* Бейджи статусов */
+span.px-2 {
+    border-radius: 0.375rem;
+    font-weight: 500;
+    font-size: 0.75rem;
+}
+
+/* Ссылки в таблицах */
+a.text-leather-dark {
+    color: var(--admin-leather-dark);
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+a.text-leather-dark:hover {
+    color: var(--admin-leather-medium);
+    text-decoration: underline;
+}
+
+/* Улучшенная типографика */
+.text-gray-600 {
+    color: #4b5563;
+}
+
+.text-gray-700 {
+    color: #374151;
+}
+
+.text-gray-900 {
+    color: #111827;
+}
+
+/* Разделители */
+.border-gray-300 {
+    border-color: #d1d5db;
+}
+
+.divide-gray-200 {
+    border-color: #e5e7eb;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    aside {
+        width: 100%;
+        position: relative;
+    }
+
+    main {
+        padding: 1rem;
+    }
+}
+
