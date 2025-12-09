@@ -452,8 +452,17 @@ def blog_post_new():
         slug = request.form.get('slug') or slugify(title)
         content = request.form.get('content')
         excerpt = request.form.get('excerpt')
-        image_url = request.form.get('image_url')
         is_published = request.form.get('is_published') == 'on'
+
+        # Обработка загрузки изображения
+        image_file = None
+        image_url = request.form.get('image_url', '').strip()
+        if 'image_file' in request.files:
+            file = request.files['image_file']
+            if file and file.filename:
+                from app.utils import save_uploaded_file
+                image_file = save_uploaded_file(file)
+                image_url = None  # Очищаем URL, если загружен файл
 
         if BlogPost.query.filter_by(slug=slug).first():
             flash('Статья с таким slug уже существует', 'error')
@@ -468,6 +477,9 @@ def blog_post_new():
             author_id=current_user.id,
             is_published=is_published
         )
+        # Устанавливаем image_file отдельно, если он был загружен
+        if image_file:
+            post.image_file = image_file
 
         if is_published:
             post.published_at = datetime.utcnow()
