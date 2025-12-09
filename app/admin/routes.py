@@ -306,8 +306,17 @@ def product_new():
         price = request.form.get('price')
         stock_quantity = request.form.get('stock_quantity', 0)
         category_id = request.form.get('category_id')
-        image_url = request.form.get('image_url')
         is_active = request.form.get('is_active') == 'on'
+
+        # Обработка загрузки изображения
+        image_file = None
+        image_url = request.form.get('image_url', '').strip()
+        if 'image_file' in request.files:
+            file = request.files['image_file']
+            if file and file.filename:
+                from app.utils import save_uploaded_file
+                image_file = save_uploaded_file(file)
+                image_url = None  # Очищаем URL, если загружен файл
 
         if Product.query.filter_by(slug=slug).first():
             flash('Товар с таким slug уже существует', 'error')
@@ -324,6 +333,9 @@ def product_new():
             image_url=image_url,
             is_active=is_active
         )
+        # Устанавливаем image_file отдельно после создания объекта
+        if image_file:
+            product.image_file = image_file
 
         try:
             db.session.add(product)
@@ -352,8 +364,25 @@ def product_edit(product_id):
         product.price = request.form.get('price')
         product.stock_quantity = int(request.form.get('stock_quantity', 0))
         product.category_id = request.form.get('category_id')
-        product.image_url = request.form.get('image_url')
         product.is_active = request.form.get('is_active') == 'on'
+
+        # Обработка загрузки изображения
+        if 'image_file' in request.files:
+            file = request.files['image_file']
+            if file and file.filename:
+                from app.utils import save_uploaded_file
+                # Удаляем старый файл, если есть
+                if hasattr(product, 'image_file') and product.image_file:
+                    old_path = os.path.join(current_app.root_path, 'static', 'uploads', product.image_file)
+                    if os.path.exists(old_path):
+                        os.remove(old_path)
+                product.image_file = save_uploaded_file(file)
+                product.image_url = None  # Очищаем URL, если загружен файл
+
+        # Если указан URL и нет файла, используем URL
+        image_url = request.form.get('image_url', '').strip()
+        if image_url and not (hasattr(product, 'image_file') and product.image_file):
+            product.image_url = image_url
 
         try:
             db.session.commit()

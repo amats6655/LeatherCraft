@@ -33,8 +33,8 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {% for related in related_posts %}
                 <div class="bg-white rounded-sm overflow-hidden shadow-sm">
-                    {% if related.image_url %}
-                    <img src="{{ related.image_url }}" alt="{{ related.title }}" class="w-full h-48 object-cover">
+                    {% if related.image_file or related.image_url %}
+                    <img src="{% if related.image_file %}{{ url_for('static', filename='uploads/' + related.image_file) }}{% else %}{{ related.image_url }}{% endif %}" alt="{{ related.title }}" class="w-full h-48 object-cover">
                     {% endif %}
                     <div class="p-6">
                         <h3 class="text-lg font-bold text-leather-dark mb-2">
