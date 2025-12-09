@@ -1,62 +1,101 @@
-{% extends "base.html" %}v
+{% extends "base.html" %}
 
-{% block title %}Заказ #{{ order.id }} {% endblock %}
+{% block title %}Заказ #{{ order.id }} — LeatherCraft{% endblock %}
 
 {% block content %}
 <section class="py-16 sm:py-24">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <h1 class="text-3xl font-bold text-leather-dark mb-8">Заказ #{{ order.id }}</h1>
 
-        <div class="bg-white rounded-sm shadow-sm p-8 mb-6">
-            <div class="grid grid-cols-2 gap-6 mb-6">
+        <div class="bg-white rounded-sm shadow-sm p-4 md:p-8 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6">
                 <div>
                     <h3 class="text-sm font-medium text-gray-700 mb-1">Дата заказа</h3>
-                    <p class=" text-gray-900>">{{ order.created_at.strftime('%d.%m.%Y %H:%M') }}</p>
+                    <p class="text-gray-900">{{ order.created_at.strftime('%d.%m.%Y %H:%M') }}</p>
                 </div>
                 <div>
-                    <h3 class="text-sm font-medium text-gay-700 mb-1">Статус</h3>
-                    <span class="px-3 py-1 text-sm rounded {% if order.status.value == 'pending' %} bg-yellow-100 text-yellow-800 {% elif order.status.value == 'processing' %} bg-blue-100 text-blue-800 {% elif order.status.value == 'shipped' %}bg-purple-100 text-purple-800 {% elif order.status.value == 'delivered' %}bg-green-100 text-green-800 {% else %} bg-red-100 text-red-800 {% endif %}">
+                    <h3 class="text-sm font-medium text-gray-700 mb-1">Статус</h3>
+                    <span class="px-3 py-1 text-sm rounded {% if order.status.value == 'pending' %}bg-yellow-100 text-yellow-800{% elif order.status.value == 'processing' %}bg-blue-100 text-blue-800{% elif order.status.value == 'shipped' %}bg-purple-100 text-purple-800{% elif order.status.value == 'delivered' %}bg-green-100 text-green-800{% else %}bg-red-100 text-red-800{% endif %}">
                         {% if order.status.value == 'pending' %}Ожидает{% elif order.status.value == 'processing' %}В обработке{% elif order.status.value == 'shipped' %}Отправлен{% elif order.status.value == 'delivered' %}Доставлен{% else %}Отменен{% endif %}
                     </span>
                 </div>
                 <div>
-                    <h3 class="text-sm ont-medium text-gray-700 mb-1">Адрес доставки </h3>
+                    <h3 class="text-sm font-medium text-gray-700 mb-1">Адрес доставки</h3>
                     <p class="text-gray-900">{{ order.shipping_address }}</p>
                 </div>
                 {% if order.phone %}
-                    <div>
-                        <h3 class="text-sm font-medium text-gray-700 mb-1">Телефон</h3>
-                        <p class="text-gray-900">{{ order.phone }}</p>
-                    </div>
+                <div>
+                    <h3 class="text-sm font-medium text-gray-700 mb-1">Телефон</h3>
+                    <p class="text-gray-900">{{ order.phone }}</p>
+                </div>
                 {% endif %}
             </div>
 
             {% if order.notes %}
-                <div class="mb-6">
-                    <h3 class="text-sm font-medium text-gray-700 mb-1">Примечания</h3>
-                    <p class="text-gray-900">{{ order.notes }}</p>
-                </div>
+            <div class="mb-6">
+                <h3 class="text-sm font-medium text-gray-700 mb-1">Примечания</h3>
+                <p class="text-gray-900">{{ order.notes }}</p>
+            </div>
             {% endif %}
         </div>
 
-        <div class="bg-white rounded-sm shadow-sm p-8">
+        <div class="bg-white rounded-sm shadow-sm p-4 md:p-8">
             <h2 class="text-xl font-bold text-leather-dark mb-6">Товары в заказе</h2>
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-leather-cream">
-                    <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Товар</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Цена</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Количество</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Итого</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    {% for item in order.items %}
+
+            <!-- Мобильная версия: карточки -->
+            <div class="md:hidden space-y-4 mb-6">
+                {% for item in order.items %}
+                <div class="border border-gray-200 rounded-sm p-4">
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0">
+                            <img src="{% if item.product.image_file %}{{ url_for('static', filename='uploads/' + item.product.image_file) }}{% else %}{{ item.product.image_url or 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&q=80' }}{% endif %}" alt="{{ item.product.name }}" class="h-20 w-20 object-cover rounded">
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h3 class="text-sm font-medium text-gray-900 mb-2">{{ item.product.name }}</h3>
+                            <div class="space-y-1 text-sm">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Цена:</span>
+                                    <span class="text-gray-900">{{ item.price }} ₽</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Количество:</span>
+                                    <span class="text-gray-900">{{ item.quantity }}</span>
+                                </div>
+                                <div class="flex justify-between pt-2 border-t border-gray-200">
+                                    <span class="font-medium text-gray-900">Итого:</span>
+                                    <span class="font-bold text-leather-dark">{{ item.price * item.quantity }} ₽</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                <div class="border-t-2 border-leather-dark pt-4">
+                    <div class="flex justify-between items-center">
+                        <span class="text-lg font-bold text-gray-900">Общая сумма:</span>
+                        <span class="text-xl font-bold text-leather-dark">{{ order.total_amount }} ₽</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Десктопная версия: таблица -->
+            <div class="hidden md:block">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-leather-cream">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Товар</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Цена</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Количество</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Итого</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {% for item in order.items %}
                         <tr>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
                                     <div class="flex-shrink-0 h-12 w-12">
-                                    <img src="{% if item.product.image_file %}{{ url_for('static', filename='uploads/' + item.product.image_file) }}{% else %}{{ item.product.image_url or 'https://placehold.co/600x400' }}{% endif %}" alt="{{ item.product.name }}" class="h-12 w-12 object-cover rounded">
+                                        <img src="{% if item.product.image_file %}{{ url_for('static', filename='uploads/' + item.product.image_file) }}{% else %}{{ item.product.image_url or 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&q=80' }}{% endif %}" alt="{{ item.product.name }}" class="h-12 w-12 object-cover rounded">
                                     </div>
                                     <div class="ml-4">
                                         <div class="text-sm font-medium text-gray-900">{{ item.product.name }}</div>
@@ -65,17 +104,18 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.price }} ₽</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.quantity }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">{{ item.price * item.quantity }} ₽</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ item.price * item.quantity }} ₽</td>
                         </tr>
-                    {% endfor %}
-                </tbody>
-                <tfoot class="bg-leather-cream">
-                    <tr>
-                        <td colspan="3" class="px-6 py-4 text-right text-sm font-medium text-gray-700">Итого:</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">{{ order.total_amount }} ₽</td>
-                    </tr>
-                </tfoot>
-            </table>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot class="bg-leather-cream">
+                        <tr>
+                            <td colspan="3" class="px-6 py-4 text-right text-sm font-medium text-gray-700">Итого:</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">{{ order.total_amount }} ₽</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
         </div>
 
         <div class="mt-6">
@@ -84,3 +124,4 @@
     </div>
 </section>
 {% endblock %}
+

@@ -45,9 +45,12 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-def save_uploaded_file(file, folder='uploads'):
+def save_uploaded_file(file, folder=None):
     """Сохраняет загруженный файл и возвращает имя файла"""
     if file and allowed_file(file.filename):
+        # Используем папку из конфигурации, если не указана
+        if folder is None:
+            folder = current_app.config.get('UPLOAD_FOLDER', 'uploads')
         # Создаем уникальное имя файла
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
         filename = secure_filename(file.filename)

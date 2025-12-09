@@ -90,31 +90,48 @@ document.addEventListener('DOMContentLoaded', function() {
 {% endif %}
 
 <section class="py-16 sm:py-20 bg-leather-cream">
+
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
             <div class="text-center">
                 <div class="w-16 h-16 bg-leather-dark rounded-full flex items-center justify-center mx-auto mb-6">
                     <i class="fas fa-certificate text-white text-2xl"></i>
                 </div>
-                <h3 class="text-xl font-bold text-leather-dark mb-3">100% натуральная кожа</h3>
-                <p class="text-gray-600 leading-relaxed">Работаем только с премиум материалами от проверенных поставщиков</p>
+                    {% if usp_first %}
+                        <h3 class="text-xl font-bold text-leather-dark mb-3">{{ usp_first.title }} </h3>
+                        <p class="text-gray-600 leading-relaxed">{{ usp_first.content }} </p>
+                    {% else %}
+                        <h3 class="text-xl font-bold text-leather-dark mb-3">Почти натуральная кожа</h3>
+                        <p class="text-gray-600 leading-relaxed">Работаем не только с премиум материалами от проверенных поставщиков</p>
+                    {% endif %}
             </div>
             <div class="text-center">
                 <div class="w-16 h-16 bg-leather-dark rounded-full flex items-center justify-center mx-auto mb-6">
                     <i class="fas fa-hands text-white text-2xl"></i>
                 </div>
-                <h3 class="text-xl font-bold text-leather-dark mb-3">Ручная работа</h3>
-                <p class="text-gray-600 leading-relaxed">Каждое изделие создается опытными мастерами с вниманием к деталям</p>
+                    {% if usp_second %}
+                        <h3 class="text-xl font-bold text-leather-dark mb-3">{{ usp_second.title }} </h3>
+                        <p class="text-gray-600 leading-relaxed">{{ usp_second.content }} </p>
+                    {% else %}
+                        <h3 class="text-xl font-bold text-leather-dark mb-3">Почти натуральная кожа</h3>
+                        <p class="text-gray-600 leading-relaxed">Работаем не только с премиум материалами от проверенных поставщиков</p>
+                    {% endif %}
             </div>
             <div class="text-center">
                 <div class="w-16 h-16 bg-leather-dark rounded-full flex items-center justify-center mx-auto mb-6">
                     <i class="fas fa-truck text-white text-2xl"></i>
                 </div>
-                <h3 class="text-xl font-bold text-leather-dark mb-3">Доставка по всему миру</h3>
-                <p class="text-gray-600 leading-relaxed">Оптовые поставки с гибкими условиями для B2B клиентов</p>
+                    {% if usp_third %}
+                        <h3 class="text-xl font-bold text-leather-dark mb-3">{{ usp_third.title }} </h3>
+                        <p class="text-gray-600 leading-relaxed">{{ usp_third.content }} </p>
+                    {% else %}
+                        <h3 class="text-xl font-bold text-leather-dark mb-3">Почти натуральная кожа</h3>
+                        <p class="text-gray-600 leading-relaxed">Работаем не только с премиум материалами от проверенных поставщиков</p>
+                    {% endif %}
             </div>
         </div>
     </div>
+
 </section>
 
 {% if featured_products %}

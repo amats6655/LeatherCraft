@@ -551,3 +551,11 @@ body.accessibility-mode .hero-swiper .swiper-pagination-bullet {
     width: 16px;
     height: 16px;
 }
+
+/* Скрываем кнопки навигации на мобильных устройствах */
+@media (max-width: 767px) {
+    .hero-swiper .swiper-button-next,
+    .hero-swiper .swiper-button-prev {
+        display: none !important;
+    }
+}
