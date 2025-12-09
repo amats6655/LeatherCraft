@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -28,7 +29,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center space-x-8">
-                    <a href="{{ url_for('admin.dashboard') }}" class="text-xl font-bold text-white hover:opacity-90 transition-opacity">Админ-панель</a>
+                    <a href="{{ url_for('admin.dashboard') }}" class="text-xl font-bold text-white hover:opacity-90 transition-opacity">{% if current_user.role.value == 'admin' %}Админ-панель{% else %}Панель управления{% endif %}</a>
                     <a href="{{ url_for('main.index') }}" class="text-white opacity-90 hover:opacity-100 hover:text-white transition-opacity">На сайт</a>
                 </div>
                 <div class="flex items-center space-x-4">
@@ -41,39 +42,74 @@
 
     <div class="flex">
         <aside class="w-64 bg-white shadow-lg min-h-screen">
-            <nav class="p-4 space-y-2">
+            {% set is_content_active = 'content' in request.endpoint or 'about' in request.endpoint or 'contact' in request.endpoint or 'hero' in request.endpoint or 'blog' in request.endpoint %}
+            {% set is_products_active = 'categories' in request.endpoint or 'category' in request.endpoint or 'product' in request.endpoint or 'order' in request.endpoint %}
+            <nav class="p-4 space-y-2" x-data="{
+                openContent: {% if is_content_active %}true{% else %}false{% endif %},
+                openProducts: {% if is_products_active %}true{% else %}false{% endif %}
+            }">
                 <a href="{{ url_for('admin.dashboard') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if request.endpoint == 'admin.dashboard' %}bg-leather-cream font-bold{% endif %}" style="border-left: 3px solid {% if request.endpoint == 'admin.dashboard' %}#3E2723{% else %}transparent{% endif %};">
                     <i class="fas fa-tachometer-alt mr-2"></i> Дашборд
                 </a>
+
                 {% if current_user.role.value == 'admin' %}
                 <a href="{{ url_for('admin.users') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if 'users' in request.endpoint %}bg-leather-cream font-bold{% endif %}" style="border-left: 3px solid {% if 'users' in request.endpoint %}#3E2723{% else %}transparent{% endif %};">
                     <i class="fas fa-users mr-2"></i> Пользователи
                 </a>
-                <a href="{{ url_for('admin.content_list') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if 'content' in request.endpoint and 'about' not in request.endpoint and 'contact' not in request.endpoint %}bg-leather-cream font-bold{% endif %}" style="border-left: 3px solid {% if 'content' in request.endpoint and 'about' not in request.endpoint and 'contact' not in request.endpoint %}#3E2723{% else %}transparent{% endif %};">
-                    <i class="fas fa-edit mr-2"></i> Контент (CMS)
-                </a>
-                <a href="{{ url_for('admin.about_edit') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if 'about' in request.endpoint %}bg-leather-cream font-bold{% endif %}" style="border-left: 3px solid {% if 'about' in request.endpoint %}#3E2723{% else %}transparent{% endif %};">
-                    <i class="fas fa-info-circle mr-2"></i> Страница About
-                </a>
-                <a href="{{ url_for('admin.contact_edit') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if 'contact' in request.endpoint %}bg-leather-cream font-bold{% endif %}" style="border-left: 3px solid {% if 'contact' in request.endpoint %}#3E2723{% else %}transparent{% endif %};">
-                    <i class="fas fa-address-book mr-2"></i> Страница Contact
-                </a>
-                <a href="{{ url_for('admin.categories') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if 'category' in request.endpoint %}bg-leather-cream font-bold{% endif %}" style="border-left: 3px solid {% if 'category' in request.endpoint %}#3E2723{% else %}transparent{% endif %};">
-                    <i class="fas fa-folder mr-2"></i> Категории
-                </a>
-                <a href="{{ url_for('admin.hero_slides') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if 'hero' in request.endpoint %}bg-leather-cream font-bold{% endif %}" style="border-left: 3px solid {% if 'hero' in request.endpoint %}#3E2723{% else %}transparent{% endif %};">
-                    <i class="fas fa-images mr-2"></i> Слайды Hero
-                </a>
                 {% endif %}
-                <a href="{{ url_for('admin.products') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if 'product' in request.endpoint %}bg-leather-cream font-bold{% endif %}" style="border-left: 3px solid {% if 'product' in request.endpoint %}#3E2723{% else %}transparent{% endif %};">
-                    <i class="fas fa-box mr-2"></i> Товары
-                </a>
-                <a href="{{ url_for('admin.orders') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if 'order' in request.endpoint %}bg-leather-cream font-bold{% endif %}" style="border-left: 3px solid {% if 'order' in request.endpoint %}#3E2723{% else %}transparent{% endif %};">
-                    <i class="fas fa-shopping-cart mr-2"></i> Заказы
-                </a>
-                <a href="{{ url_for('admin.blog_posts') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if 'blog' in request.endpoint %}bg-leather-cream font-bold{% endif %}" style="border-left: 3px solid {% if 'blog' in request.endpoint %}#3E2723{% else %}transparent{% endif %};">
-                    <i class="fas fa-newspaper mr-2"></i> Блог
-                </a>
+
+                <!-- Контент (CMS) - выпадающее меню -->
+                <div>
+                    <button @click="openContent = !openContent" class="w-full flex items-center justify-between px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if is_content_active %}bg-leather-cream font-bold{% endif %}" style="border-left: 3px solid {% if is_content_active %}#3E2723{% else %}transparent{% endif %};">
+                        <span>
+                            <i class="fas fa-edit mr-2"></i> Контент (CMS)
+                        </span>
+                        <i class="fas fa-chevron-down text-xs transition-transform" :class="{'rotate-180': openContent}"></i>
+                    </button>
+                    <div x-show="openContent" x-transition class="ml-4 mt-1 space-y-1">
+                        {% if current_user.role.value == 'admin' %}
+                        <a href="{{ url_for('admin.content_list') }}" class="block px-4 py-2 text-gray-600 hover:bg-leather-cream rounded-sm text-sm {% if 'content' in request.endpoint and 'about' not in request.endpoint and 'contact' not in request.endpoint and 'hero' not in request.endpoint and 'blog' not in request.endpoint %}bg-leather-cream font-bold{% endif %}">
+                            <i class="fas fa-list mr-2"></i> Список контента
+                        </a>
+                        <a href="{{ url_for('admin.about_edit') }}" class="block px-4 py-2 text-gray-600 hover:bg-leather-cream rounded-sm text-sm {% if 'about' in request.endpoint %}bg-leather-cream font-bold{% endif %}">
+                            <i class="fas fa-info-circle mr-2"></i> Страница About
+                        </a>
+                        <a href="{{ url_for('admin.contact_edit') }}" class="block px-4 py-2 text-gray-600 hover:bg-leather-cream rounded-sm text-sm {% if 'contact' in request.endpoint %}bg-leather-cream font-bold{% endif %}">
+                            <i class="fas fa-address-book mr-2"></i> Страница Contact
+                        </a>
+                        <a href="{{ url_for('admin.hero_slides') }}" class="block px-4 py-2 text-gray-600 hover:bg-leather-cream rounded-sm text-sm {% if 'hero' in request.endpoint %}bg-leather-cream font-bold{% endif %}">
+                            <i class="fas fa-images mr-2"></i> Слайды Hero
+                        </a>
+                        {% endif %}
+                        <a href="{{ url_for('admin.blog_posts') }}" class="block px-4 py-2 text-gray-600 hover:bg-leather-cream rounded-sm text-sm {% if 'blog' in request.endpoint %}bg-leather-cream font-bold{% endif %}">
+                            <i class="fas fa-newspaper mr-2"></i> Блог
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Товары и заказы - выпадающее меню -->
+                <div>
+                    <button @click="openProducts = !openProducts" class="w-full flex items-center justify-between px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if is_products_active %}bg-leather-cream font-bold{% endif %}" style="border-left: 3px solid {% if is_products_active %}#3E2723{% else %}transparent{% endif %};">
+                        <span>
+                            <i class="fas fa-shopping-bag mr-2"></i> Товары и заказы
+                        </span>
+                        <i class="fas fa-chevron-down text-xs transition-transform" :class="{'rotate-180': openProducts}"></i>
+                    </button>
+                    <div x-show="openProducts" x-transition class="ml-4 mt-1 space-y-1">
+                        {% if current_user.role.value == 'admin' %}
+                        <a href="{{ url_for('admin.categories') }}" class="block px-4 py-2 text-gray-600 hover:bg-leather-cream rounded-sm text-sm {% if 'categories' in request.endpoint or 'category' in request.endpoint %}bg-leather-cream font-bold{% endif %}">
+                            <i class="fas fa-folder mr-2"></i> Категории
+                        </a>
+                        {% endif %}
+                        <a href="{{ url_for('admin.products') }}" class="block px-4 py-2 text-gray-600 hover:bg-leather-cream rounded-sm text-sm {% if 'product' in request.endpoint %}bg-leather-cream font-bold{% endif %}">
+                            <i class="fas fa-box mr-2"></i> Товары
+                        </a>
+                        <a href="{{ url_for('admin.orders') }}" class="block px-4 py-2 text-gray-600 hover:bg-leather-cream rounded-sm text-sm {% if 'order' in request.endpoint %}bg-leather-cream font-bold{% endif %}">
+                            <i class="fas fa-shopping-cart mr-2"></i> Заказы
+                        </a>
+                    </div>
+                </div>
+
                 <a href="{{ url_for('admin.messages') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream rounded-sm {% if 'message' in request.endpoint %}bg-leather-cream font-bold{% endif %}" style="border-left: 3px solid {% if 'message' in request.endpoint %}#3E2723{% else %}transparent{% endif %};">
                     <i class="fas fa-envelope mr-2"></i> Обращения
                 </a>
