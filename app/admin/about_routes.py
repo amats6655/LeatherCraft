@@ -9,7 +9,6 @@ from datetime import datetime
 import os
 from flask import current_app
 
-
 @admin.route('/about', methods=['GET', 'POST'])
 @admin_required
 def about_edit():
@@ -103,11 +102,12 @@ def about_edit():
             if file_key in request.files:
                 file = request.files[file_key]
                 if file and file.filename:
-                    # Удаляем старое изображение, если есть
+                    # Удаляем старое изображение, если есть (только если это файл, а не URL)
                     if img_content and img_content.content:
-                        old_path = os.path.join(current_app.root_path, 'static', 'uploads', img_content.content)
-                        if os.path.exists(old_path):
-                            os.remove(old_path)
+                        if isinstance(img_content.content, str) and not img_content.content.startswith('http'):
+                            old_path = os.path.join(current_app.root_path, 'static', 'uploads', img_content.content)
+                            if os.path.exists(old_path):
+                                os.remove(old_path)
 
                     # Сохраняем новое изображение
                     filename = save_uploaded_file(file)
@@ -132,15 +132,13 @@ def about_edit():
             image_url = request.form.get(url_key, '').strip()
             if image_url:
                 # Проверяем, был ли загружен файл в этом запросе
-                file_uploaded = file_key in request.files and request.files[file_key] and request.files[
-                    file_key].filename
+                file_uploaded = file_key in request.files and request.files[file_key] and request.files[file_key].filename
 
                 if not file_uploaded:
                     # Если файл не был загружен, используем URL
                     if img_content:
                         # Если есть загруженный файл (не URL), не перезаписываем
-                        if not img_content.content or (
-                                isinstance(img_content.content, str) and img_content.content.startswith('http')):
+                        if not img_content.content or (isinstance(img_content.content, str) and img_content.content.startswith('http')):
                             img_content.content = image_url
                             img_content.updated_by_id = current_user.id
                             img_content.updated_at = datetime.utcnow()
@@ -164,9 +162,9 @@ def about_edit():
             flash(f'Ошибка при обновлении страницы: {e}', 'error')
 
     return render_template('admin/about_edit.html',
-                           about_content=about_content,
-                           stats_years=stats_years,
-                           stats_masters=stats_masters,
-                           stats_countries=stats_countries,
-                           about_images=about_images)
+                         about_content=about_content,
+                         stats_years=stats_years,
+                         stats_masters=stats_masters,
+                         stats_countries=stats_countries,
+                         about_images=about_images)
 
