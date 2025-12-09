@@ -24,12 +24,12 @@ def slugify(text):
 def dashboard():
     """Главная страница админ-панели"""
     stats = {
-        'users_count': User.query.count(),
+        'users_count': User.query.count() if current_user.role == RoleEnum.ADMIN else None,
         'products_count': Product.query.count(),
         'orders_count': Order.query.count(),
         'orders_pending': Order.query.filter_by(status=OrderStatusEnum.PENDING).count(),
         'blog_posts_count': BlogPost.query.count(),
-        'content_items': Content.query.count(),
+        'content_items': Content.query.count() if current_user.role == RoleEnum.ADMIN else None,
         'messages_unread': ContactMessage.query.filter_by(is_read=False).count()
     }
 
