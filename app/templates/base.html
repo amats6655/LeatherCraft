@@ -161,15 +161,21 @@
                 <div>
                     <div class="font-bold text-lg mb-4">Мы в соцсетях</div>
                     <div class="flex space-x-4">
-                        <a href="#" class="w-10 h-10 bg-leather-medium rounded-full flex items-center justify-center hover:bg-leather-light transition-colors">
+                        {% if social_instagram_url %}
+                        <a href="{{ social_instagram_url }}" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-leather-medium rounded-full flex items-center justify-center hover:bg-leather-light transition-colors" title="Instagram">
                             <i class="fab fa-instagram"></i>
                         </a>
-                        <a href="#" class="w-10 h-10 bg-leather-medium rounded-full flex items-center justify-center hover:bg-leather-light transition-colors">
+                        {% endif %}
+                        {% if social_facebook_url %}
+                        <a href="{{ social_facebook_url }}" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-leather-medium rounded-full flex items-center justify-center hover:bg-leather-light transition-colors" title="Facebook">
                             <i class="fab fa-facebook-f"></i>
                         </a>
-                        <a href="#" class="w-10 h-10 bg-leather-medium rounded-full flex items-center justify-center hover:bg-leather-light transition-colors">
+                        {% endif %}
+                        {% if social_telegram_url %}
+                        <a href="{{ social_telegram_url }}" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-leather-medium rounded-full flex items-center justify-center hover:bg-leather-light transition-colors" title="Telegram">
                             <i class="fab fa-telegram-plane"></i>
                         </a>
+                        {% endif %}
                     </div>
                 </div>
             </div>

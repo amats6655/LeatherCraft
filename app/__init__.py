@@ -56,4 +56,19 @@ def create_app():
         db.session.rollback()
         return render_template('500.html'), 500
 
+    # Context processor для передачи данных во все шаблоны
+    @app.context_processor
+    def inject_social_links():
+        """Добавляет ссылки на социальные сети во все шаблоны"""
+        from app.models import Content
+        social_instagram = Content.query.filter_by(key='social_instagram').first()
+        social_facebook = Content.query.filter_by(key='social_facebook').first()
+        social_telegram = Content.query.filter_by(key='social_telegram').first()
+
+        return {
+            'social_instagram_url': social_instagram.content if social_instagram and social_instagram.content else None,
+            'social_facebook_url': social_facebook.content if social_facebook and social_facebook.content else None,
+            'social_telegram_url': social_telegram.content if social_telegram and social_telegram.content else None,
+        }
+
     return app

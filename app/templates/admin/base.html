@@ -42,7 +42,7 @@
 
     <div class="flex">
         <aside class="w-64 bg-white shadow-lg min-h-screen">
-            {% set is_content_active = 'content' in request.endpoint or 'about' in request.endpoint or 'contact' in request.endpoint or 'hero' in request.endpoint or 'blog' in request.endpoint %}
+            {% set is_content_active = 'content' in request.endpoint or 'about' in request.endpoint or 'contact' in request.endpoint or 'social' in request.endpoint or 'hero' in request.endpoint or 'blog' in request.endpoint %}
             {% set is_products_active = 'categories' in request.endpoint or 'category' in request.endpoint or 'product' in request.endpoint or 'order' in request.endpoint %}
             <nav class="p-4 space-y-2" x-data="{
                 openContent: {% if is_content_active %}true{% else %}false{% endif %},
