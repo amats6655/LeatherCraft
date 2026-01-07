@@ -1,14 +1,14 @@
-from flask import render_template, request, flash, redirect, url_for, abort, current_app
-from flask_login import login_required, current_user
-from app.admin import admin
-from app import db
-from app.models import User, Product, Category, Order, BlogPost, Content, ContactMessage, HeroSlide, RoleEnum, \
-    OrderStatusEnum
-from app.utils import admin_required, manager_required
-from sqlalchemy import func
-from datetime import datetime
-import re
 import os
+import re
+from datetime import datetime
+
+from flask import render_template, request, flash, redirect, url_for, current_app
+from flask_login import current_user
+
+from app import db
+from app.admin import admin
+from app.models import User, Product, Category, Order, BlogPost, Content, ContactMessage, RoleEnum, OrderStatusEnum
+from app.utils import admin_required, manager_required
 
 
 def slugify(text):
@@ -257,28 +257,6 @@ def category_edit(category_id):
 
     return render_template('admin/category_edit.html', category=category)
 
-
-@admin.route('/categories/<int:category_id>/delete', methods=['POST'])
-@admin_required
-def category_delete(category_id):
-    """Удаление категории"""
-    category = Category.query.get_or_404(category_id)
-
-    if category.products.count() > 0:
-        flash('Нельзя удалить категорию, в которой есть товары', 'error')
-        return redirect(url_for('admin.categories'))
-
-    try:
-        db.session.delete(category)
-        db.session.commit()
-        flash('Категория успешно удалена', 'success')
-    except Exception as e:
-        db.session.rollback()
-        flash('Ошибка при удалении категории', 'error')
-
-    return redirect(url_for('admin.categories'))
-
-
 # Управление товарами
 @admin.route('/products')
 @manager_required
@@ -397,7 +375,7 @@ def product_edit(product_id):
 
 
 @admin.route('/products/<int:product_id>/delete', methods=['POST'])
-@manager_required
+@admin_required
 def product_delete(product_id):
     """Удаление товара"""
     product = Product.query.get_or_404(product_id)
@@ -573,7 +551,7 @@ def blog_post_edit(post_id):
 
 
 @admin.route('/blog/<int:post_id>/delete', methods=['POST'])
-@manager_required
+@admin_required
 def blog_post_delete(post_id):
     """Удаление статьи"""
     post = BlogPost.query.get_or_404(post_id)
