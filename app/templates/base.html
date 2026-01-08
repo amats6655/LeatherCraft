@@ -7,6 +7,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script defer src="https://lidrekon.ru/slep/js/uhpv-full.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script>
         tailwind.config = {
@@ -28,7 +30,7 @@
     {% block extra_head %}{% endblock %}
 </head>
 <body class="font-sans" x-data="{ mobileMenuOpen: false }">
-    <nav class="fixed top-0 left-0 right-0 bg-white shadow-sm z-50">
+    <nav class="fixed left-0 right-0 bg-white shadow-sm z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20">
                 <div class="flex items-center">
@@ -62,17 +64,17 @@
                         <a href="{{ url_for('auth.register') }}" class="btn btn-primary px-6 py-2.5">Регистрация</a>
                     {% endif %}
                     <!-- Кнопка переключения стилей -->
-                    <button id="accessibility-toggle" class="text-gray-700 hover:text-leather-dark transition-colors" title="Переключить режим для слабовидящих">
+                    <a id="specialButton" href="#" сlass="text-gray-700 hover:text-leather-dark transition-colors">
                         <i class="fas fa-eye text-xl"></i>
-                    </button>
+                    </a>
                 </div>
 
                 <!-- Мобильное меню: кнопки -->
                 <div class="md:hidden flex items-center space-x-4">
                     <!-- Кнопка переключения стилей для мобильных -->
-                    <button id="accessibility-toggle-mobile" class="text-gray-700 hover:text-leather-dark transition-colors" title="Переключить режим для слабовидящих">
+                    <a id="specialButton" href="#" сlass="text-gray-700 hover:text-leather-dark transition-colors">
                         <i class="fas fa-eye text-xl"></i>
-                    </button>
+                    </a>
 
                     <!-- Бургер-меню -->
                     <button @click="mobileMenuOpen = !mobileMenuOpen" class="text-gray-700 hover:text-leather-dark transition-colors" aria-label="Меню">
@@ -119,7 +121,6 @@
             </div>
         </div>
     </nav>
-
     <main class="pt-20">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
@@ -185,7 +186,6 @@
         </div>
     </footer>
 
-    <script src="{{ url_for('static', filename='js/style-switcher.js') }}"></script>
     {% block extra_scripts %}{% endblock %}
 </body>
 </html>

@@ -64,61 +64,6 @@
 }
 
 /* ============================================
-   СТИЛИ ДЛЯ СЛАБОВИДЯЩИХ (ГОСТ Р 52872-2012)
-   Требования: контрастность ≥4.5:1, шрифт ≥14pt
-   ============================================ */
-body.accessibility-mode {
-    /* Цвета с высоким контрастом (контрастность 7:1 и выше) */
-    --color-primary: #003366; /* Темно-синий - контраст 7.1:1 с белым */
-    --color-primary-hover: #004488;
-    --color-secondary: #006633; /* Темно-зеленый - контраст 6.8:1 */
-    --color-secondary-hover: #008844;
-
-    /* Фоны - белый и светло-серый для контраста */
-    --bg-primary: #ffffff;
-    --bg-secondary: #f5f5f5;
-    --bg-tertiary: #eeeeee;
-
-    /* Текст - темно-серый на белом (контраст 12.6:1) */
-    --text-primary: #1a1a1a;
-    --text-secondary: #2a2a2a;
-    --text-muted: #3a3a3a;
-    --text-inverse: #ffffff;
-
-    /* Границы - более толстые и контрастные */
-    --border-color: #333333; /* Контраст 12.6:1 */
-    --border-color-dark: #1a1a1a;
-    --border-width: 2px;
-    --border-radius: 0.25rem;
-
-    /* Кнопки - контрастные, но не черно-белые */
-    --btn-primary-bg: #003366; /* Темно-синий */
-    --btn-primary-color: #ffffff;
-    --btn-primary-hover-bg: #004488;
-    --btn-secondary-bg: #ffffff;
-    --btn-secondary-color: #1a1a1a;
-    --btn-secondary-hover-bg: #f0f0f0;
-    --btn-secondary-border: #333333;
-
-    /* Типографика - увеличенные размеры (минимум 14pt = 18.67px) */
-    --font-size-base: 19px; /* Чуть больше минимума для комфорта */
-    --font-size-sm: 17px;
-    --font-size-lg: 22px;
-    --font-size-xl: 26px;
-    --font-size-2xl: 30px;
-    --font-size-3xl: 38px;
-    --line-height-base: 1.8;
-    --line-height-tight: 1.5;
-
-    /* Увеличенные отступы для лучшей читаемости */
-    --spacing-xs: 0.5rem;
-    --spacing-sm: 0.75rem;
-    --spacing-md: 1.5rem;
-    --spacing-lg: 2rem;
-    --spacing-xl: 3rem;
-}
-
-/* ============================================
    БАЗОВЫЕ СТИЛИ
    ============================================ */
 body {
@@ -271,15 +216,6 @@ select:focus {
     box-shadow: 0 0 0 3px rgba(62, 39, 35, 0.1);
 }
 
-body.accessibility-mode input:focus,
-body.accessibility-mode textarea:focus,
-body.accessibility-mode select:focus {
-    outline: 3px solid var(--color-primary);
-    outline-offset: 2px;
-    border-color: var(--color-primary);
-    box-shadow: none;
-}
-
 /* ============================================
    КАРТОЧКИ И БЛОКИ
    ============================================ */
@@ -289,11 +225,6 @@ body.accessibility-mode select:focus {
     border-radius: var(--border-radius);
     padding: var(--spacing-lg);
     box-shadow: var(--shadow-sm);
-}
-
-body.accessibility-mode .card {
-    border-width: 2px;
-    border-color: var(--border-color);
 }
 
 /* ============================================
@@ -309,19 +240,6 @@ nav a {
 nav a:hover {
     color: var(--color-primary);
     background-color: var(--bg-secondary);
-}
-
-body.accessibility-mode nav a {
-    border-bottom: 2px solid transparent;
-    padding: 0.75rem 1rem;
-}
-
-body.accessibility-mode nav a:hover,
-body.accessibility-mode nav a:focus {
-    border-bottom-color: var(--color-primary);
-    background-color: var(--bg-secondary);
-    outline: 2px solid var(--color-primary);
-    outline-offset: -2px;
 }
 
 /* ============================================
@@ -343,21 +261,6 @@ th {
     background-color: var(--bg-secondary);
     font-weight: 600;
     color: var(--text-primary);
-}
-
-body.accessibility-mode table {
-    border-width: 2px;
-}
-
-body.accessibility-mode th,
-body.accessibility-mode td {
-    border-width: 2px;
-    padding: 1rem;
-}
-
-body.accessibility-mode th {
-    background-color: var(--text-primary);
-    color: var(--text-inverse);
 }
 
 /* ============================================
@@ -400,92 +303,6 @@ body.accessibility-mode th {
     border-color: var(--btn-primary-hover-bg);
 }
 
-body.accessibility-mode .style-switcher {
-    border-width: 3px;
-}
-
-body.accessibility-mode .style-switcher button {
-    font-size: var(--font-size-base);
-    font-weight: bold;
-    border-width: 2px;
-}
-
-/* ============================================
-   СПЕЦИФИЧНЫЕ СТИЛИ ДЛЯ СЛАБОВИДЯЩИХ
-   ============================================ */
-body.accessibility-mode {
-    /* Улучшенная видимость ссылок */
-    a:not(.btn):not(button) {
-        text-decoration: underline !important;
-        color: var(--color-primary) !important;
-        font-weight: 600 !important;
-        border-bottom: 1px solid var(--color-primary) !important;
-    }
-
-    a:not(.btn):not(button):hover,
-    a:not(.btn):not(button):focus {
-        background-color: #ffffcc !important;
-        color: var(--text-primary) !important;
-        outline: 2px solid var(--color-primary) !important;
-        outline-offset: 2px !important;
-    }
-
-    /* Улучшенная видимость заголовков */
-    h1 {
-        border-bottom: 3px solid var(--text-primary) !important;
-        padding-bottom: 0.5em !important;
-        margin-bottom: 1em !important;
-    }
-
-    h2 {
-        border-bottom: 2px solid var(--text-primary) !important;
-        padding-bottom: 0.3em !important;
-        margin-bottom: 0.8em !important;
-    }
-
-    /* Улучшенная видимость фона и карточек */
-    .bg-leather-cream,
-    .bg-white,
-    .card {
-        background-color: var(--bg-primary) !important;
-        border: var(--border-width) solid var(--border-color) !important;
-    }
-
-    /* Улучшенная видимость навигации */
-    nav {
-        border-bottom: 3px solid var(--border-color) !important;
-    }
-
-    nav a {
-        border-bottom: 2px solid transparent !important;
-    }
-
-    nav a:hover,
-    nav a:focus {
-        border-bottom-color: var(--color-primary) !important;
-        background-color: var(--bg-secondary) !important;
-    }
-
-    /* Убираем лишние тени для чистоты */
-    * {
-        box-shadow: none !important;
-    }
-
-    /* Улучшенная видимость таблиц */
-    table {
-        border: var(--border-width) solid var(--border-color) !important;
-    }
-
-    th {
-        background-color: var(--color-primary) !important;
-        color: var(--text-inverse) !important;
-        font-weight: bold !important;
-    }
-
-    td {
-        border: 1px solid var(--border-color) !important;
-    }
-}
 
 /* ============================================
    УТИЛИТЫ
@@ -536,20 +353,6 @@ body.accessibility-mode {
 .hero-swiper .swiper-button-next,
 .hero-swiper .swiper-button-prev {
     color: white;
-}
-
-body.accessibility-mode .hero-swiper .swiper-button-next,
-body.accessibility-mode .hero-swiper .swiper-button-prev {
-    background-color: var(--color-primary);
-    border: 2px solid var(--text-inverse);
-    width: 50px;
-    height: 50px;
-}
-
-body.accessibility-mode .hero-swiper .swiper-pagination-bullet {
-    background: var(--text-inverse);
-    width: 16px;
-    height: 16px;
 }
 
 /* Скрываем кнопки навигации на мобильных устройствах */
