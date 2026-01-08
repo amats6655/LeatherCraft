@@ -8,6 +8,13 @@ class Config:
     UPLOAD_FOLDER = 'uploads'
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB max file size
 
+    # Настройки для работы за прокси
+    TRUSTED_PROXIES = ['127.0.0.1']  # IP адреса доверенных прокси
+    PROXY_COUNT = 1  # Количество прокси перед приложением
+
+    # Настройки логирования
+    LOG_IP_ADDRESSES = True
+
     # Настройки сессии
     PERMANENT_SESSION_LIFETIME = timedelta(hours=24)
 
