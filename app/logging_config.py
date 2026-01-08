@@ -156,9 +156,16 @@ def setup_logging(app):
     else:
         use_json = False
     
+    # Преобразуем относительный путь в абсолютный относительно корня приложения
+    # Это важно для работы с Gunicorn, где рабочая директория может отличаться
+    if not os.path.isabs(log_dir):
+        # Получаем корневую директорию приложения (родительскую от app/)
+        app_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        log_dir = os.path.join(app_root, log_dir)
+    
     # Создаем директорию для логов, если её нет
-    if not os.path.exists(log_dir):
-        os.makedirs(log_dir)
+    # Используем exist_ok=True для безопасности в многопроцессном режиме
+    os.makedirs(log_dir, exist_ok=True)
     
     # Выбираем форматтер
     if use_json:
@@ -172,6 +179,7 @@ def setup_logging(app):
     app.logger.setLevel(getattr(logging, log_level.upper(), logging.INFO))
     
     # Удаляем существующие хендлеры
+    # В Gunicorn это важно делать, так как хендлеры могут дублироваться
     app.logger.handlers.clear()
     
     # Консольный хендлер
@@ -179,6 +187,10 @@ def setup_logging(app):
     console_handler.setLevel(logging.INFO)
     console_handler.setFormatter(formatter)
     app.logger.addHandler(console_handler)
+    
+    # Отключаем распространение логов в корневой логгер
+    # Это предотвращает дублирование логов в Gunicorn
+    app.logger.propagate = False
     
     # Файловый хендлер для общих логов
     app_log_file = os.path.join(log_dir, 'app.log')
@@ -271,4 +283,11 @@ def setup_logging(app):
     flask_logger.setLevel(logging.CRITICAL)
     flask_logger.propagate = False
     
-    app.logger.info(f"Logging configured: format={'JSON' if use_json else 'Text'}, level={log_level}")
+    # Настройка логгера Gunicorn для работы с нашей системой логирования
+    # Gunicorn использует свой собственный логгер, который может конфликтовать
+    gunicorn_logger = logging.getLogger('gunicorn')
+    gunicorn_logger.propagate = False  # Отключаем распространение, чтобы не дублировать логи
+    
+    # Логируем информацию о настройке
+    # Используем файловый хендлер, так как консольный может не работать в Gunicorn
+    app.logger.info(f"Logging configured: format={'JSON' if use_json else 'Text'}, level={log_level}, dir={log_dir}")
