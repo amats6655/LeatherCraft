@@ -1,11 +1,12 @@
 import os
 import re
+import logging
 from datetime import datetime
 
 from flask import render_template, request, flash, redirect, url_for, current_app
 from flask_login import current_user
 
-from app import db
+from app import db, get_client_ip
 from app.admin import admin
 from app.models import User, Product, Category, Order, BlogPost, Content, ContactMessage, RoleEnum, OrderStatusEnum
 from app.utils import admin_required, manager_required
@@ -73,10 +74,43 @@ def edit_user(user_id):
 
         try:
             db.session.commit()
+            actions_logger = logging.getLogger('app.actions')
+            actions_logger.info(
+                f"User updated: {user.username}",
+                extra={
+                    'action': 'user_update',
+                    'status': 'success',
+                    'user_id': current_user.id,
+                    'username': current_user.username,
+                    'entity_type': 'user',
+                    'entity_id': user.id,
+                    'ip_address': get_client_ip(),
+                    'extra_data': {
+                        'updated_user_id': user.id,
+                        'updated_username': user.username,
+                        'role_changed': user.role.value if hasattr(user.role, 'value') else str(user.role),
+                        'is_active': user.is_active
+                    }
+                }
+            )
             flash('Пользователь успешно обновлен', 'success')
             return redirect(url_for('admin.users'))
         except Exception as e:
             db.session.rollback()
+            actions_logger = logging.getLogger('app.actions')
+            actions_logger.error(
+                f"User update failed: {str(e)}",
+                exc_info=True,
+                extra={
+                    'action': 'user_update',
+                    'status': 'error',
+                    'user_id': current_user.id,
+                    'username': current_user.username,
+                    'entity_type': 'user',
+                    'entity_id': user_id,
+                    'ip_address': get_client_ip()
+                }
+            )
             flash('Ошибка при обновлении пользователя', 'error')
 
     return render_template('admin/edit_user.html', user=user)
@@ -93,11 +127,43 @@ def delete_user(user_id):
         return redirect(url_for('admin.users'))
 
     try:
+        deleted_username = user.username
+        deleted_user_id = user.id
         db.session.delete(user)
         db.session.commit()
+        actions_logger = logging.getLogger('app.actions')
+        actions_logger.info(
+            f"User deleted: {deleted_username}",
+            extra={
+                'action': 'user_delete',
+                'status': 'success',
+                'user_id': current_user.id,
+                'username': current_user.username,
+                'entity_type': 'user',
+                'entity_id': deleted_user_id,
+                'ip_address': get_client_ip(),
+                'extra_data': {
+                    'deleted_username': deleted_username
+                }
+            }
+        )
         flash('Пользователь успешно удален', 'success')
     except Exception as e:
         db.session.rollback()
+        actions_logger = logging.getLogger('app.actions')
+        actions_logger.error(
+            f"User delete failed: {str(e)}",
+            exc_info=True,
+            extra={
+                'action': 'user_delete',
+                'status': 'error',
+                'user_id': current_user.id,
+                'username': current_user.username,
+                'entity_type': 'user',
+                'entity_id': user_id,
+                'ip_address': get_client_ip()
+            }
+        )
         flash('Ошибка при удалении пользователя', 'error')
 
     return redirect(url_for('admin.users'))
@@ -149,10 +215,39 @@ def content_new():
         try:
             db.session.add(content)
             db.session.commit()
+            actions_logger = logging.getLogger('app.actions')
+            actions_logger.info(
+                f"Content created: {key}",
+                extra={
+                    'action': 'content_create',
+                    'status': 'success',
+                    'user_id': current_user.id,
+                    'username': current_user.username,
+                    'entity_type': 'content',
+                    'entity_id': content.id,
+                    'ip_address': get_client_ip(),
+                    'extra_data': {
+                        'content_key': key,
+                        'section': section
+                    }
+                }
+            )
             flash('Контент успешно создан', 'success')
             return redirect(url_for('admin.content_list'))
         except Exception as e:
             db.session.rollback()
+            actions_logger = logging.getLogger('app.actions')
+            actions_logger.error(
+                f"Content creation failed: {str(e)}",
+                exc_info=True,
+                extra={
+                    'action': 'content_create',
+                    'status': 'error',
+                    'user_id': current_user.id,
+                    'username': current_user.username,
+                    'ip_address': get_client_ip()
+                }
+            )
             flash('Ошибка при создании контента', 'error')
 
     return render_template('admin/content_edit.html')
@@ -174,10 +269,40 @@ def content_edit(content_id):
 
         try:
             db.session.commit()
+            actions_logger = logging.getLogger('app.actions')
+            actions_logger.info(
+                f"Content updated: {content.key}",
+                extra={
+                    'action': 'content_update',
+                    'status': 'success',
+                    'user_id': current_user.id,
+                    'username': current_user.username,
+                    'entity_type': 'content',
+                    'entity_id': content.id,
+                    'ip_address': get_client_ip(),
+                    'extra_data': {
+                        'content_key': content.key
+                    }
+                }
+            )
             flash('Контент успешно обновлен', 'success')
             return redirect(url_for('admin.content_list'))
         except Exception as e:
             db.session.rollback()
+            actions_logger = logging.getLogger('app.actions')
+            actions_logger.error(
+                f"Content update failed: {str(e)}",
+                exc_info=True,
+                extra={
+                    'action': 'content_update',
+                    'status': 'error',
+                    'user_id': current_user.id,
+                    'username': current_user.username,
+                    'entity_type': 'content',
+                    'entity_id': content_id,
+                    'ip_address': get_client_ip()
+                }
+            )
             flash('Ошибка при обновлении контента', 'error')
 
     return render_template('admin/content_edit.html', content=content)
@@ -190,11 +315,42 @@ def content_delete(content_id):
     content = Content.query.get_or_404(content_id)
 
     try:
+        content_key = content.key
         db.session.delete(content)
         db.session.commit()
+        actions_logger = logging.getLogger('app.actions')
+        actions_logger.info(
+            f"Content deleted: {content_key}",
+            extra={
+                'action': 'content_delete',
+                'status': 'success',
+                'user_id': current_user.id,
+                'username': current_user.username,
+                'entity_type': 'content',
+                'entity_id': content_id,
+                'ip_address': get_client_ip(),
+                'extra_data': {
+                    'content_key': content_key
+                }
+            }
+        )
         flash('Контент успешно удален', 'success')
     except Exception as e:
         db.session.rollback()
+        actions_logger = logging.getLogger('app.actions')
+        actions_logger.error(
+            f"Content delete failed: {str(e)}",
+            exc_info=True,
+            extra={
+                'action': 'content_delete',
+                'status': 'error',
+                'user_id': current_user.id,
+                'username': current_user.username,
+                'entity_type': 'content',
+                'entity_id': content_id,
+                'ip_address': get_client_ip()
+            }
+        )
         flash('Ошибка при удалении контента', 'error')
 
     return redirect(url_for('admin.content_list'))
@@ -227,10 +383,39 @@ def category_new():
         try:
             db.session.add(category)
             db.session.commit()
+            actions_logger = logging.getLogger('app.actions')
+            actions_logger.info(
+                f"Category created: {name}",
+                extra={
+                    'action': 'category_create',
+                    'status': 'success',
+                    'user_id': current_user.id,
+                    'username': current_user.username,
+                    'entity_type': 'category',
+                    'entity_id': category.id,
+                    'ip_address': get_client_ip(),
+                    'extra_data': {
+                        'category_name': name,
+                        'slug': slug
+                    }
+                }
+            )
             flash('Категория успешно создана', 'success')
             return redirect(url_for('admin.categories'))
         except Exception as e:
             db.session.rollback()
+            actions_logger = logging.getLogger('app.actions')
+            actions_logger.error(
+                f"Category creation failed: {str(e)}",
+                exc_info=True,
+                extra={
+                    'action': 'category_create',
+                    'status': 'error',
+                    'user_id': current_user.id,
+                    'username': current_user.username,
+                    'ip_address': get_client_ip()
+                }
+            )
             flash('Ошибка при создании категории', 'error')
 
     return render_template('admin/category_edit.html')
@@ -249,10 +434,41 @@ def category_edit(category_id):
 
         try:
             db.session.commit()
+            actions_logger = logging.getLogger('app.actions')
+            actions_logger.info(
+                f"Category updated: {category.name}",
+                extra={
+                    'action': 'category_update',
+                    'status': 'success',
+                    'user_id': current_user.id,
+                    'username': current_user.username,
+                    'entity_type': 'category',
+                    'entity_id': category.id,
+                    'ip_address': get_client_ip(),
+                    'extra_data': {
+                        'category_name': category.name,
+                        'slug': category.slug
+                    }
+                }
+            )
             flash('Категория успешно обновлена', 'success')
             return redirect(url_for('admin.categories'))
         except Exception as e:
             db.session.rollback()
+            actions_logger = logging.getLogger('app.actions')
+            actions_logger.error(
+                f"Category update failed: {str(e)}",
+                exc_info=True,
+                extra={
+                    'action': 'category_update',
+                    'status': 'error',
+                    'user_id': current_user.id,
+                    'username': current_user.username,
+                    'entity_type': 'category',
+                    'entity_id': category_id,
+                    'ip_address': get_client_ip()
+                }
+            )
             flash('Ошибка при обновлении категории', 'error')
 
     return render_template('admin/category_edit.html', category=category)
@@ -319,10 +535,41 @@ def product_new():
         try:
             db.session.add(product)
             db.session.commit()
+            actions_logger = logging.getLogger('app.actions')
+            actions_logger.info(
+                f"Product created: {name}",
+                extra={
+                    'action': 'product_create',
+                    'status': 'success',
+                    'user_id': current_user.id,
+                    'username': current_user.username,
+                    'entity_type': 'product',
+                    'entity_id': product.id,
+                    'ip_address': get_client_ip(),
+                    'extra_data': {
+                        'product_name': name,
+                        'price': price,
+                        'stock_quantity': stock_quantity,
+                        'category_id': category_id
+                    }
+                }
+            )
             flash('Товар успешно создан', 'success')
             return redirect(url_for('admin.products'))
         except Exception as e:
             db.session.rollback()
+            actions_logger = logging.getLogger('app.actions')
+            actions_logger.error(
+                f"Product creation failed: {str(e)}",
+                exc_info=True,
+                extra={
+                    'action': 'product_create',
+                    'status': 'error',
+                    'user_id': current_user.id,
+                    'username': current_user.username,
+                    'ip_address': get_client_ip()
+                }
+            )
             flash('Ошибка при создании товара', 'error')
 
     return render_template('admin/product_edit.html', categories=categories)
@@ -365,10 +612,42 @@ def product_edit(product_id):
 
         try:
             db.session.commit()
+            actions_logger = logging.getLogger('app.actions')
+            actions_logger.info(
+                f"Product updated: {product.name}",
+                extra={
+                    'action': 'product_update',
+                    'status': 'success',
+                    'user_id': current_user.id,
+                    'username': current_user.username,
+                    'entity_type': 'product',
+                    'entity_id': product.id,
+                    'ip_address': get_client_ip(),
+                    'extra_data': {
+                        'product_name': product.name,
+                        'price': product.price,
+                        'stock_quantity': product.stock_quantity
+                    }
+                }
+            )
             flash('Товар успешно обновлен', 'success')
             return redirect(url_for('admin.products'))
         except Exception as e:
             db.session.rollback()
+            actions_logger = logging.getLogger('app.actions')
+            actions_logger.error(
+                f"Product update failed: {str(e)}",
+                exc_info=True,
+                extra={
+                    'action': 'product_update',
+                    'status': 'error',
+                    'user_id': current_user.id,
+                    'username': current_user.username,
+                    'entity_type': 'product',
+                    'entity_id': product_id,
+                    'ip_address': get_client_ip()
+                }
+            )
             flash('Ошибка при обновлении товара', 'error')
 
     return render_template('admin/product_edit.html', product=product, categories=categories)
@@ -381,11 +660,43 @@ def product_delete(product_id):
     product = Product.query.get_or_404(product_id)
 
     try:
+        product_name = product.name
+        product_id_val = product.id
         db.session.delete(product)
         db.session.commit()
+        actions_logger = logging.getLogger('app.actions')
+        actions_logger.info(
+            f"Product deleted: {product_name}",
+            extra={
+                'action': 'product_delete',
+                'status': 'success',
+                'user_id': current_user.id,
+                'username': current_user.username,
+                'entity_type': 'product',
+                'entity_id': product_id_val,
+                'ip_address': get_client_ip(),
+                'extra_data': {
+                    'product_name': product_name
+                }
+            }
+        )
         flash('Товар успешно удален', 'success')
     except Exception as e:
         db.session.rollback()
+        actions_logger = logging.getLogger('app.actions')
+        actions_logger.error(
+            f"Product delete failed: {str(e)}",
+            exc_info=True,
+            extra={
+                'action': 'product_delete',
+                'status': 'error',
+                'user_id': current_user.id,
+                'username': current_user.username,
+                'entity_type': 'product',
+                'entity_id': product_id,
+                'ip_address': get_client_ip()
+            }
+        )
         flash('Ошибка при удалении товара', 'error')
 
     return redirect(url_for('admin.products'))
@@ -426,11 +737,45 @@ def order_update_status(order_id):
     new_status = request.form.get('status')
 
     try:
+        old_status = order.status.value if hasattr(order.status, 'value') else str(order.status)
         order.status = OrderStatusEnum(new_status)
         db.session.commit()
+        actions_logger = logging.getLogger('app.actions')
+        actions_logger.info(
+            f"Order status updated: {order.id}",
+            extra={
+                'action': 'order_status_update',
+                'status': 'success',
+                'user_id': current_user.id,
+                'username': current_user.username,
+                'entity_type': 'order',
+                'entity_id': order.id,
+                'ip_address': get_client_ip(),
+                'extra_data': {
+                    'order_id': order.id,
+                    'old_status': old_status,
+                    'new_status': new_status,
+                    'order_user_id': order.user_id
+                }
+            }
+        )
         flash('Статус заказа обновлен', 'success')
     except Exception as e:
         db.session.rollback()
+        actions_logger = logging.getLogger('app.actions')
+        actions_logger.error(
+            f"Order status update failed: {str(e)}",
+            exc_info=True,
+            extra={
+                'action': 'order_status_update',
+                'status': 'error',
+                'user_id': current_user.id,
+                'username': current_user.username,
+                'entity_type': 'order',
+                'entity_id': order_id,
+                'ip_address': get_client_ip()
+            }
+        )
         flash('Ошибка при обновлении статуса', 'error')
 
     return redirect(url_for('admin.order_detail', order_id=order_id))
@@ -495,10 +840,40 @@ def blog_post_new():
         try:
             db.session.add(post)
             db.session.commit()
+            actions_logger = logging.getLogger('app.actions')
+            actions_logger.info(
+                f"Blog post created: {title}",
+                extra={
+                    'action': 'blog_post_create',
+                    'status': 'success',
+                    'user_id': current_user.id,
+                    'username': current_user.username,
+                    'entity_type': 'blog_post',
+                    'entity_id': post.id,
+                    'ip_address': get_client_ip(),
+                    'extra_data': {
+                        'post_title': title,
+                        'slug': slug,
+                        'is_published': is_published
+                    }
+                }
+            )
             flash('Статья успешно создана', 'success')
             return redirect(url_for('admin.blog_posts'))
         except Exception as e:
             db.session.rollback()
+            actions_logger = logging.getLogger('app.actions')
+            actions_logger.error(
+                f"Blog post creation failed: {str(e)}",
+                exc_info=True,
+                extra={
+                    'action': 'blog_post_create',
+                    'status': 'error',
+                    'user_id': current_user.id,
+                    'username': current_user.username,
+                    'ip_address': get_client_ip()
+                }
+            )
             flash('Ошибка при создании статьи', 'error')
 
     return render_template('admin/blog_post_edit.html')
@@ -541,10 +916,43 @@ def blog_post_edit(post_id):
 
         try:
             db.session.commit()
+            actions_logger = logging.getLogger('app.actions')
+            actions_logger.info(
+                f"Blog post updated: {post.title}",
+                extra={
+                    'action': 'blog_post_update',
+                    'status': 'success',
+                    'user_id': current_user.id,
+                    'username': current_user.username,
+                    'entity_type': 'blog_post',
+                    'entity_id': post.id,
+                    'ip_address': get_client_ip(),
+                    'extra_data': {
+                        'post_title': post.title,
+                        'slug': post.slug,
+                        'is_published': post.is_published,
+                        'was_published': was_published
+                    }
+                }
+            )
             flash('Статья успешно обновлена', 'success')
             return redirect(url_for('admin.blog_posts'))
         except Exception as e:
             db.session.rollback()
+            actions_logger = logging.getLogger('app.actions')
+            actions_logger.error(
+                f"Blog post update failed: {str(e)}",
+                exc_info=True,
+                extra={
+                    'action': 'blog_post_update',
+                    'status': 'error',
+                    'user_id': current_user.id,
+                    'username': current_user.username,
+                    'entity_type': 'blog_post',
+                    'entity_id': post_id,
+                    'ip_address': get_client_ip()
+                }
+            )
             flash('Ошибка при обновлении статьи', 'error')
 
     return render_template('admin/blog_post_edit.html', post=post)
@@ -557,11 +965,43 @@ def blog_post_delete(post_id):
     post = BlogPost.query.get_or_404(post_id)
 
     try:
+        post_title = post.title
+        post_id_val = post.id
         db.session.delete(post)
         db.session.commit()
+        actions_logger = logging.getLogger('app.actions')
+        actions_logger.info(
+            f"Blog post deleted: {post_title}",
+            extra={
+                'action': 'blog_post_delete',
+                'status': 'success',
+                'user_id': current_user.id,
+                'username': current_user.username,
+                'entity_type': 'blog_post',
+                'entity_id': post_id_val,
+                'ip_address': get_client_ip(),
+                'extra_data': {
+                    'post_title': post_title
+                }
+            }
+        )
         flash('Статья успешно удалена', 'success')
     except Exception as e:
         db.session.rollback()
+        actions_logger = logging.getLogger('app.actions')
+        actions_logger.error(
+            f"Blog post delete failed: {str(e)}",
+            exc_info=True,
+            extra={
+                'action': 'blog_post_delete',
+                'status': 'error',
+                'user_id': current_user.id,
+                'username': current_user.username,
+                'entity_type': 'blog_post',
+                'entity_id': post_id,
+                'ip_address': get_client_ip()
+            }
+        )
         flash('Ошибка при удалении статьи', 'error')
 
     return redirect(url_for('admin.blog_posts'))

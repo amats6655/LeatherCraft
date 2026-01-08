@@ -1,10 +1,11 @@
 from flask import render_template, request, flash, redirect, url_for, session
 from flask_login import login_required, current_user
 from app.user import user
-from app import db
+from app import db, get_client_ip
 from app.models import User, Product, Order, OrderItem, OrderStatusEnum
 from decimal import Decimal
 import re
+import logging
 
 email_pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
 
@@ -32,9 +33,37 @@ def profile():
 
         try:
             db.session.commit()
+            actions_logger = logging.getLogger('app.actions')
+            actions_logger.info(
+                f"User profile updated: {current_user.username}",
+                extra={
+                    'action': 'profile_update',
+                    'status': 'success',
+                    'user_id': current_user.id,
+                    'username': current_user.username,
+                    'entity_type': 'user',
+                    'entity_id': current_user.id,
+                    'ip_address': get_client_ip(),
+                    'extra_data': {
+                        'password_changed': bool(new_password)
+                    }
+                }
+            )
             flash('Профиль успешно обновлен', 'success')
         except Exception as e:
             db.session.rollback()
+            actions_logger = logging.getLogger('app.actions')
+            actions_logger.error(
+                f"Profile update failed: {str(e)}",
+                exc_info=True,
+                extra={
+                    'action': 'profile_update',
+                    'status': 'error',
+                    'user_id': current_user.id,
+                    'username': current_user.username,
+                    'ip_address': get_client_ip()
+                }
+            )
             flash('Ошибка при обновлении профиля', 'error')
 
     return render_template('user/profile.html')
@@ -95,6 +124,23 @@ def cart_add(product_id):
         })
 
     session['cart'] = cart
+    actions_logger = logging.getLogger('app.actions')
+    actions_logger.info(
+        f"Product added to cart: {product.name}",
+        extra={
+            'action': 'cart_add',
+            'status': 'success',
+            'user_id': current_user.id,
+            'username': current_user.username,
+            'entity_type': 'product',
+            'entity_id': product_id,
+            'ip_address': get_client_ip(),
+            'extra_data': {
+                'product_name': product.name,
+                'quantity': quantity
+            }
+        }
+    )
     flash(f'Товар "{product.name}" добавлен в корзину', 'success')
 
     return redirect(request.referrer or url_for ('main.catalog'))
@@ -104,8 +150,26 @@ def cart_add(product_id):
 def cart_remove(product_id):
     """Удаление товара из корзины"""
     cart = session.get('cart', [])
+    product = Product.query.get(product_id)
+    product_name = product.name if product else f'Product ID: {product_id}'
     cart = [item for item in cart if item['product_id'] != product_id]
     session['cart'] = cart
+    actions_logger = logging.getLogger('app.actions')
+    actions_logger.info(
+        f"Product removed from cart: {product_name}",
+        extra={
+            'action': 'cart_remove',
+            'status': 'success',
+            'user_id': current_user.id,
+            'username': current_user.username,
+            'entity_type': 'product',
+            'entity_id': product_id,
+            'ip_address': get_client_ip(),
+            'extra_data': {
+                'product_name': product_name
+            }
+        }
+    )
     flash('Товар удален из корзины', 'success')
     return redirect(url_for('user.cart'))
 
@@ -232,10 +296,44 @@ def checkout():
             # Очищаем корзину
             session['cart'] = []
 
+            # Логируем оформление заказа
+            actions_logger = logging.getLogger('app.actions')
+            order_items_data = [{'product_id': item['product'].id, 'quantity': item['quantity'], 'price': str(item['product'].price)} for item in products]
+            actions_logger.info(
+                f"Order created: {order.id}",
+                extra={
+                    'action': 'order_create',
+                    'status': 'success',
+                    'user_id': current_user.id,
+                    'username': current_user.username,
+                    'entity_type': 'order',
+                    'entity_id': order.id,
+                    'ip_address': get_client_ip(),
+                    'extra_data': {
+                        'order_id': order.id,
+                        'total_amount': str(total),
+                        'items_count': len(products),
+                        'items': order_items_data
+                    }
+                }
+            )
+
             flash('Заказ успешно оформлен!', 'success')
             return redirect(url_for('user.order_detail', order_id=order.id))
         except Exception as e:
             db.session.rollback()
+            actions_logger = logging.getLogger('app.actions')
+            actions_logger.error(
+                f"Order creation failed: {str(e)}",
+                exc_info=True,
+                extra={
+                    'action': 'order_create',
+                    'status': 'error',
+                    'user_id': current_user.id,
+                    'username': current_user.username,
+                    'ip_address': get_client_ip()
+                }
+            )
             flash('Ошибка при оформлении заказа', 'error')
 
     return render_template('user/checkout.html', products=products, total=total)

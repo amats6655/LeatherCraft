@@ -1,10 +1,11 @@
-from flask import Flask, request
+from flask import Flask, request, g
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
 from werkzeug.middleware.proxy_fix import ProxyFix
 from config import Config
 import logging
+import time
 
 db = SQLAlchemy()
 login_manager = LoginManager()
@@ -66,7 +67,8 @@ def create_app():
     login_manager.login_message_category = 'info'
 
     # Настройка логирования
-    setup_request_logging(app)
+    from app.logging_config import setup_logging
+    setup_logging(app)
 
     # Регистрацию Blueprint'ов
     from app.routes import main
@@ -81,33 +83,102 @@ def create_app():
 
     # Middleware для логирования всех запросов
     @app.before_request
-    def log_request_info():
-        """Логирование информации о каждом запросе"""
-        if app.debug:  # Логируем только в режиме отладки
-            client_ip = get_client_ip()
-            app.logger.info(
-                f"Request: {request.method} {request.path} | "
-                f"IP: {client_ip} | "
-                f"User-Agent: {request.headers.get('User-Agent', 'Unknown')}"
-            )
+    def log_request_start():
+        """Начало запроса - записываем время начала"""
+        g.start_time = time.time()
+    
+    @app.after_request
+    def log_request_info(response):
+        """Логирование информации о каждом запросе с временем выполнения"""
+        # Исключаем статические файлы из детального логирования
+        if request.path.startswith('/static/'):
+            return response
+        
+        # Вычисляем время выполнения
+        duration_ms = 0
+        if hasattr(g, 'start_time'):
+            duration_ms = int((time.time() - g.start_time) * 1000)
+        
+        # Получаем логгер для запросов
+        requests_logger = logging.getLogger('app.requests')
+        
+        # Создаем запись лога
+        log_record = requests_logger.makeRecord(
+            requests_logger.name,
+            logging.INFO,
+            __file__,
+            0,
+            f"{request.method} {request.path}",
+            (),
+            None
+        )
+        
+        # Добавляем дополнительные поля
+        log_record.duration_ms = duration_ms
+        log_record.status_code = response.status_code
+        
+        # Добавляем информацию о пользователе, если есть
+        try:
+            from flask_login import current_user
+            if current_user.is_authenticated:
+                log_record.user_id = current_user.id
+                log_record.username = current_user.username
+        except:
+            pass
+        
+        # Логируем медленные запросы как WARNING
+        slow_request_threshold = 1000  # 1 секунда
+        if duration_ms > slow_request_threshold:
+            log_record.levelno = logging.WARNING
+            log_record.levelname = 'WARNING'
+            requests_logger.handle(log_record)
+        else:
+            requests_logger.handle(log_record)
+        
+        return response
 
     # Регистрация обработчиков ошибок на уровне приложения
     @app.errorhandler(403)
     def forbidden_error(error):
         from flask import render_template
-        app.logger.warning(f"403 Forbidden: IP={get_client_ip()}, Path={request.path}")
+        errors_logger = logging.getLogger('app.errors')
+        errors_logger.warning(
+            f"403 Forbidden: IP={get_client_ip()}, Path={request.path}",
+            extra={
+                'action': 'forbidden_access',
+                'status': 'error',
+                'status_code': 403
+            }
+        )
         return render_template('403.html'), 403
 
     @app.errorhandler(404)
     def not_found_error(error):
         from flask import render_template
-        app.logger.info(f"404 Not Found: IP={get_client_ip()}, Path={request.path}")
+        requests_logger = logging.getLogger('app.requests')
+        requests_logger.info(
+            f"404 Not Found: IP={get_client_ip()}, Path={request.path}",
+            extra={
+                'action': 'not_found',
+                'status_code': 404
+            }
+        )
         return render_template('404.html'), 404
 
     @app.errorhandler(500)
     def internal_error(error):
         from flask import render_template
-        app.logger.error(f"500 Internal Error: IP={get_client_ip()}, Path={request.path}, Error={error}")
+        errors_logger = logging.getLogger('app.errors')
+        import traceback
+        errors_logger.error(
+            f"500 Internal Error: IP={get_client_ip()}, Path={request.path}, Error={str(error)}",
+            exc_info=True,
+            extra={
+                'action': 'internal_error',
+                'status': 'error',
+                'status_code': 500
+            }
+        )
         db.session.rollback()
         return render_template('500.html'), 500
 
@@ -130,33 +201,3 @@ def create_app():
         }
 
     return app
-
-
-def setup_request_logging(app):
-    """Настройка форматирования логов с IP-адресами"""
-
-    class IPAddressFormatter(logging.Formatter):
-        """Кастомный форматтер для логов с IP-адресом"""
-
-        def format(self, record):
-            # Добавляем IP адрес к записи лога если есть контекст запроса
-            try:
-                # Используем get_client_ip через app context
-                with app.app_context():
-                    if hasattr(request, 'url_rule') and request.url_rule:
-                        record.client_ip = get_client_ip() or 'N/A'
-                    else:
-                        record.client_ip = 'N/A'
-            except RuntimeError:
-                record.client_ip = 'N/A'
-
-            return super().format(record)
-
-    # Настраиваем формат логов
-    formatter = IPAddressFormatter(
-        '%(asctime)s - %(name)s - %(levelname)s - [IP: %(client_ip)s] - %(message)s'
-    )
-
-    # Применяем форматтер к хендлеру
-    for handler in app.logger.handlers:
-        handler.setFormatter(formatter)

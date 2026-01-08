@@ -14,6 +14,11 @@ class Config:
 
     # Настройки логирования
     LOG_IP_ADDRESSES = True
+    LOG_LEVEL = os.environ.get('LOG_LEVEL') or 'INFO'  # DEBUG, INFO, WARNING, ERROR
+    LOG_DIR = os.environ.get('LOG_DIR') or 'logs'  # Директория для логов
+    LOG_MAX_BYTES = int(os.environ.get('LOG_MAX_BYTES', 10 * 1024 * 1024))  # 10MB по умолчанию
+    LOG_BACKUP_COUNT = int(os.environ.get('LOG_BACKUP_COUNT', 5))  # Количество резервных файлов
+    LOG_FORMAT = os.environ.get('LOG_FORMAT', 'json')  # 'json', 'text', или 'auto' (auto = json для продакшена, text для разработки)
 
     # Настройки сессии
     PERMANENT_SESSION_LIFETIME = timedelta(hours=24)

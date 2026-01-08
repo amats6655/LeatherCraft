@@ -1,7 +1,8 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, abort
 from app.models import Product, Category, BlogPost, Content, HeroSlide
-from app import db
+from app import db, get_client_ip
 from sqlalchemy import or_, func
+import logging
 
 main = Blueprint('main', __name__)
 
@@ -178,10 +179,35 @@ def contact():
         try:
             db.session.add(contact_message)
             db.session.commit()
+            actions_logger = logging.getLogger('app.actions')
+            actions_logger.info(
+                f"Contact message sent: {name}",
+                extra={
+                    'action': 'contact_message',
+                    'status': 'success',
+                    'ip_address': get_client_ip(),
+                    'user_agent': request.headers.get('User-Agent', 'N/A'),
+                    'extra_data': {
+                        'name': name,
+                        'email': email,
+                        'has_phone': bool(phone)
+                    }
+                }
+            )
             flash('Спасибо за ваше сообщение! Мы свяжемся с вами в ближайшее время.', 'success')
             return redirect(url_for('main.contact'))
         except Exception as e:
             db.session.rollback()
+            actions_logger = logging.getLogger('app.actions')
+            actions_logger.error(
+                f"Contact message failed: {str(e)}",
+                exc_info=True,
+                extra={
+                    'action': 'contact_message',
+                    'status': 'error',
+                    'ip_address': get_client_ip()
+                }
+            )
             flash('Произошла ошибка при отправке сообщения. Попробуйте позже.', 'error')
 
     contact_info = {
