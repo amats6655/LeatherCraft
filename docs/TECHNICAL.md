@@ -83,8 +83,6 @@ LeatherCraft/
 │   │   ├── css/
 │   │   │   ├── main.css         # Основные стили
 │   │   │   └── admin.css        # Стили админ-панели
-│   │   ├── js/
-│   │   │   └── style-switcher.js # Переключатель стилей
 │   │   └── uploads/             # Загруженные изображения
 │   │
 │   └── templates/               # Jinja2 шаблоны
