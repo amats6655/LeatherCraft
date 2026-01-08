@@ -39,20 +39,18 @@ class JSONFormatter(logging.Formatter):
                 pass
         
         # Добавляем дополнительные поля из record
-        if hasattr(record, 'action'):
-            log_data['action'] = record.action
-        if hasattr(record, 'status'):
-            log_data['status'] = record.status
-        if hasattr(record, 'duration_ms'):
-            log_data['duration_ms'] = record.duration_ms
-        if hasattr(record, 'status_code'):
-            log_data['status_code'] = record.status_code
-        if hasattr(record, 'entity_type'):
-            log_data['entity_type'] = record.entity_type
-        if hasattr(record, 'entity_id'):
-            log_data['entity_id'] = record.entity_id
-        if hasattr(record, 'extra_data'):
-            log_data['extra_data'] = record.extra_data
+        # Когда используется logger.info(msg, extra={...}), данные попадают в record.__dict__
+        # Стандартные атрибуты LogRecord, которые нужно пропустить
+        standard_attrs = {'name', 'msg', 'args', 'created', 'filename', 'funcName', 
+                         'levelname', 'levelno', 'lineno', 'module', 'msecs', 
+                         'message', 'pathname', 'process', 'processName', 'relativeCreated',
+                         'thread', 'threadName', 'exc_info', 'exc_text', 'stack_info',
+                         'getMessage', 'exc_text'}
+        
+        # Добавляем все нестандартные атрибуты из record
+        for key, value in record.__dict__.items():
+            if key not in standard_attrs and key not in log_data:
+                log_data[key] = value
         
         # Добавляем информацию об исключении, если есть
         if record.exc_info:
@@ -207,6 +205,8 @@ def setup_logging(app):
     # Логгер для HTTP запросов
     requests_logger = logging.getLogger('app.requests')
     requests_logger.setLevel(logging.INFO)
+    # Очищаем хендлеры, чтобы избежать дублирования при перезагрузке
+    requests_logger.handlers.clear()
     requests_log_file = os.path.join(log_dir, 'requests.log')
     requests_file_handler = RotatingFileHandler(
         requests_log_file,
@@ -217,12 +217,17 @@ def setup_logging(app):
     requests_file_handler.setLevel(logging.INFO)
     requests_file_handler.setFormatter(formatter)
     requests_logger.addHandler(requests_file_handler)
+    # Добавляем консольный хендлер
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(logging.INFO)
+    console_handler.setFormatter(formatter)
     requests_logger.addHandler(console_handler)
     requests_logger.propagate = False
     
     # Логгер для действий пользователей
     actions_logger = logging.getLogger('app.actions')
     actions_logger.setLevel(logging.INFO)
+    actions_logger.handlers.clear()
     actions_log_file = os.path.join(log_dir, 'actions.log')
     actions_file_handler = RotatingFileHandler(
         actions_log_file,
@@ -233,12 +238,16 @@ def setup_logging(app):
     actions_file_handler.setLevel(logging.INFO)
     actions_file_handler.setFormatter(formatter)
     actions_logger.addHandler(actions_file_handler)
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(logging.INFO)
+    console_handler.setFormatter(formatter)
     actions_logger.addHandler(console_handler)
     actions_logger.propagate = False
     
     # Логгер для аутентификации
     auth_logger = logging.getLogger('app.auth')
     auth_logger.setLevel(logging.INFO)
+    auth_logger.handlers.clear()
     auth_log_file = os.path.join(log_dir, 'auth.log')
     auth_file_handler = RotatingFileHandler(
         auth_log_file,
@@ -249,12 +258,16 @@ def setup_logging(app):
     auth_file_handler.setLevel(logging.INFO)
     auth_file_handler.setFormatter(formatter)
     auth_logger.addHandler(auth_file_handler)
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(logging.INFO)
+    console_handler.setFormatter(formatter)
     auth_logger.addHandler(console_handler)
     auth_logger.propagate = False
     
     # Логгер для ошибок
     errors_logger = logging.getLogger('app.errors')
     errors_logger.setLevel(logging.ERROR)
+    errors_logger.handlers.clear()
     errors_log_file = os.path.join(log_dir, 'errors.log')
     errors_file_handler = RotatingFileHandler(
         errors_log_file,
@@ -265,6 +278,9 @@ def setup_logging(app):
     errors_file_handler.setLevel(logging.ERROR)
     errors_file_handler.setFormatter(formatter)
     errors_logger.addHandler(errors_file_handler)
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(logging.ERROR)
+    console_handler.setFormatter(formatter)
     errors_logger.addHandler(console_handler)
     errors_logger.propagate = False
     

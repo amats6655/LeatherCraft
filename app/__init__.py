@@ -102,38 +102,30 @@ def create_app():
         # Получаем логгер для запросов
         requests_logger = logging.getLogger('app.requests')
         
-        # Создаем запись лога
-        log_record = requests_logger.makeRecord(
-            requests_logger.name,
-            logging.INFO,
-            __file__,
-            0,
-            f"{request.method} {request.path}",
-            (),
-            None
-        )
-        
-        # Добавляем дополнительные поля
-        log_record.duration_ms = duration_ms
-        log_record.status_code = response.status_code
+        # Подготавливаем дополнительные данные для логирования
+        extra_data = {
+            'duration_ms': duration_ms,
+            'status_code': response.status_code
+        }
         
         # Добавляем информацию о пользователе, если есть
         try:
             from flask_login import current_user
             if current_user.is_authenticated:
-                log_record.user_id = current_user.id
-                log_record.username = current_user.username
+                extra_data['user_id'] = current_user.id
+                extra_data['username'] = current_user.username
         except:
             pass
+        
+        # Формируем сообщение
+        message = f"{request.method} {request.path}"
         
         # Логируем медленные запросы как WARNING
         slow_request_threshold = 1000  # 1 секунда
         if duration_ms > slow_request_threshold:
-            log_record.levelno = logging.WARNING
-            log_record.levelname = 'WARNING'
-            requests_logger.handle(log_record)
+            requests_logger.warning(message, extra=extra_data)
         else:
-            requests_logger.handle(log_record)
+            requests_logger.info(message, extra=extra_data)
         
         return response
 
