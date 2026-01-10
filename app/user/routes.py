@@ -14,7 +14,7 @@ email_pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
 def profile():
     """Профиль пользователя"""
     if request.method == 'POST':
-        current_user.fullname = request.form.get('full_name')
+        current_user.full_name = request.form.get('full_name')
         current_user.email = request.form.get('email', '').strip()
         current_user.address = request.form.get('address')
         current_user.phone = request.form.get('phone')
@@ -189,7 +189,7 @@ def cart_update():
 
             if product and 0 < quantity <= product.stock_quantity:
                 item['quantity'] = quantity
-            elif quantity > product.stok_quantity:
+            elif quantity > product.stock_quantity:
                 flash(f'Недостаточно товара "{product.name}" на складе.', 'error')
 
     session['cart'] = cart
