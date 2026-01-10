@@ -31,7 +31,7 @@
                     <p class="text-green-600 font-medium mb-4">В наличии: {{ product.stock_quantity }} шт.</p>
                     {% if current_user.is_authenticated %}
                     <form method="POST" action="{{ url_for('user.cart_add', product_id=product.id) }}" class="flex gap-4 items-center">
-                        <input type="number" name="quantity" value="1" min="1" max="{{ product.stock_quantity }}" class="w-20 px-3 py-2 border border-gray-300 rounded-sm">
+                        <input type="number" name="quantity" value="1" min="1" max="{{ product.stock_quantity }}" placeholder="1" class="w-20 px-3 py-2 border border-gray-300 rounded-sm">
                         <button type="submit" class="btn btn-primary px-8 py-3">
                             Добавить в корзину
                         </button>

@@ -9,7 +9,8 @@
         
         {% if cart_items %}
         <div class="bg-white rounded-sm shadow-sm overflow-hidden">
-            <table class="min-w-full divide-y divide-gray-200">
+            <div class="table-wrap">
+                <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-leather-cream">
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Товар</th>
@@ -35,7 +36,7 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.product.price }} ₽</td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <form method="POST" action="{{ url_for('user.cart_update') }}" class="flex items-center gap-2">
-                                <input type="number" name="quantity_{{ item.product.id }}" value="{{ item.quantity }}" min="1" max="{{ item.product.stock_quantity }}" class="w-20 px-2 py-1 border border-gray-300 rounded-sm">
+                                <input type="number" name="quantity_{{ item.product.id }}" value="{{ item.quantity }}" min="1" max="{{ item.product.stock_quantity }}" placeholder="{{ item.quantity }}" class="w-20 px-2 py-1 border border-gray-300 rounded-sm">
                                 <button type="submit" class="text-leather-dark hover:text-leather-medium text-sm">Обновить</button>
                             </form>
                         </td>
@@ -51,6 +52,7 @@
                     {% endfor %}
                 </tbody>
             </table>
+            </div>
             
             <div class="bg-leather-cream px-6 py-4 flex justify-between items-center">
                 <div class="text-xl font-bold text-leather-dark">Итого: {{ total }} ₽</div>
