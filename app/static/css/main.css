@@ -2,43 +2,30 @@
    СИСТЕМА CSS ПЕРЕМЕННЫХ ДЛЯ СТАНДАРТНОГО СТИЛЯ
    ============================================ */
 :root {
-    /* Цвета кожаной темы */
-    --color-leather-dark: #3E2723;
-    --color-leather-medium: #6D4C41;
-    --color-leather-light: #A1887F;
-    --color-leather-cream: #EFEBE9;
-    --color-leather-beige: #D7CCC8;
+    --brand: #3E2723;
+    --brand-hover: #6D4C41;
+    --ring: rgba(62, 39, 35, 0.55);
 
-    /* Основные цвета */
-    --color-primary: #3E2723;
-    --color-primary-hover: #6D4C41;
-    --color-secondary: #6D4C41;
-    --color-secondary-hover: #8D6E63;
+    --surface-1: #ffffff;
+    --surface-2: #EFEBE9;
+    --surface-3: #FAF7F5;
 
-    /* Фоны */
-    --bg-primary: #ffffff;
-    --bg-secondary: #EFEBE9;
-    --bg-tertiary: #F5F5F5;
+    --on-surface: #1a1a1a;
+    --on-surface-2: #424242;
+    --on-surface-muted: #5B6472;
+    --on-surface-inverse: #ffffff;
 
-    /* Текст */
-    --text-primary: #1a1a1a;
-    --text-secondary: #424242;
-    --text-muted: #6b7280;
-    --text-inverse: #ffffff;
-
-    /* Границы */
-    --border-color: #d1d5db;
-    --border-color-dark: #9ca3af;
+    --border-subtle: #8F817E;
+    --border-strong: #6b5f5c;
     --border-width: 1px;
     --border-radius: 0.375rem;
 
-    /* Кнопки */
-    --btn-primary-bg: var(--color-primary);
-    --btn-primary-color: var(--text-inverse);
-    --btn-primary-hover-bg: var(--color-primary-hover);
-    --btn-secondary-bg: var(--bg-secondary);
-    --btn-secondary-color: var(--text-primary);
-    --btn-secondary-hover-bg: var(--color-leather-beige);
+    --success: #059669;
+    --warning: #d97706;
+    --danger: #dc2626;
+    --info: #2563eb;
+
+    --focus-ring-width: 3px;
 
     /* Типографика */
     --font-size-base: 16px;
@@ -61,9 +48,6 @@
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-
-    --focus-ring-color: rgba(62, 39, 35, 0.3);
-    --focus-ring-width: 3px;
 }
 
 /* ============================================
@@ -73,8 +57,8 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     font-size: var(--font-size-base);
     line-height: var(--line-height-base);
-    color: var(--text-primary);
-    background-color: var(--bg-primary);
+    color: var(--on-surface);
+    background-color: var(--surface-1);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     letter-spacing: 0.01em;
@@ -95,7 +79,7 @@ h1, h2, h3, h4, h5, h6 {
     line-height: var(--line-height-tight);
     margin-top: 0;
     margin-bottom: 0.5em;
-    color: var(--text-primary);
+    color: var(--on-surface);
     letter-spacing: -0.02em;
 }
 
@@ -114,18 +98,29 @@ h3 {
 p {
     margin-bottom: var(--spacing-md);
     line-height: 1.7;
-    color: var(--text-secondary);
+    color: var(--on-surface-2);
 }
 
 a {
-    color: var(--color-primary);
+    color: var(--brand);
     text-decoration: none;
     transition: color 0.2s ease;
 }
 
 a:hover {
-    color: var(--color-primary-hover);
+    color: var(--brand-hover);
     text-decoration: none;
+}
+
+/* Подчёркивание ссылок в тексте */
+p a {
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+    text-decoration-thickness: 1px;
+}
+
+p a:hover {
+    text-decoration-thickness: 2px;
 }
 
 /* ============================================
@@ -142,7 +137,7 @@ a[role="button"] {
     line-height: 1.5;
     text-align: center;
     text-decoration: none;
-    border: var(--border-width) solid var(--border-color);
+    border: var(--border-width) solid var(--border-subtle);
     border-radius: var(--border-radius);
     cursor: pointer;
     transition: all 0.2s ease;
@@ -154,38 +149,38 @@ a[role="button"] {
 .btn-primary,
 button.btn-primary,
 button[type="submit"]:not(.btn-secondary) {
-    background-color: var(--btn-primary-bg);
-    color: var(--btn-primary-color);
-    border-color: var(--btn-primary-bg);
+    background-color: var(--brand);
+    color: var(--on-surface-inverse);
+    border-color: var(--brand);
 }
 
 .btn-primary:hover,
 button.btn-primary:hover,
 button[type="submit"]:not(.btn-secondary):hover {
-    background-color: var(--btn-primary-hover-bg);
-    border-color: var(--btn-primary-hover-bg);
-    color: var(--btn-primary-color);
+    background-color: var(--brand-hover);
+    border-color: var(--brand-hover);
+    color: var(--on-surface-inverse);
 }
 
 /* Вторичная кнопка */
 .btn-secondary,
 button.btn-secondary {
-    background-color: var(--btn-secondary-bg);
-    color: var(--btn-secondary-color);
-    border-color: var(--border-color);
+    background-color: var(--surface-2);
+    color: var(--on-surface);
+    border-color: var(--border-subtle);
 }
 
 .btn-secondary:hover,
 button.btn-secondary:hover {
-    background-color: var(--btn-secondary-hover-bg);
-    border-color: var(--border-color-dark);
+    background-color: #D7CCC8;
+    border-color: var(--border-strong);
 }
 
 /* Кнопка-ссылка */
 .btn-link {
     background: none;
     border: none;
-    color: var(--color-primary);
+    color: var(--brand);
     text-decoration: underline;
     padding: 0.5rem;
     min-width: auto;
@@ -193,7 +188,24 @@ button.btn-secondary:hover {
 
 .btn-link:hover {
     background-color: transparent;
-    color: var(--color-primary-hover);
+    color: var(--brand-hover);
+}
+
+/* Состояния кнопок */
+.btn:active,
+button[type="submit"]:active,
+button[type="button"]:active,
+a[role="button"]:active {
+    transform: translateY(1px);
+}
+
+.btn:disabled,
+.btn[aria-disabled="true"],
+button[type="submit"]:disabled,
+button[type="button"]:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
 }
 
 /* ============================================
@@ -210,28 +222,38 @@ select {
     padding: 0.75rem;
     font-size: var(--font-size-base);
     line-height: 1.5;
-    color: var(--text-primary);
-    background-color: var(--bg-primary);
-    border: var(--border-width) solid var(--border-color);
+    color: var(--on-surface);
+    background-color: var(--surface-1);
+    border: var(--border-width) solid var(--border-subtle);
     border-radius: var(--border-radius);
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
     min-height: 44px;
 }
 
-input:focus,
-textarea:focus,
-select:focus {
+::placeholder {
+    color: color-mix(in srgb, var(--on-surface-muted) 75%, transparent);
+}
+
+:where(input, textarea, select)[aria-invalid="true"] {
+    border-color: var(--danger);
+    box-shadow: 0 0 0 var(--focus-ring-width) rgba(220, 38, 38, 0.25);
+}
+
+:where(input, textarea, select, button, a):focus {
     outline: none;
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 var(--focus-ring-width) var(--focus-ring-color);
+}
+
+:where(input, textarea, select, button, a):focus-visible {
+    box-shadow: 0 0 0 var(--focus-ring-width) var(--ring);
+    border-color: var(--brand);
 }
 
 /* ============================================
    КАРТОЧКИ И БЛОКИ
    ============================================ */
 .card {
-    background-color: var(--bg-primary);
-    border: var(--border-width) solid var(--border-color);
+    background-color: var(--surface-1);
+    border: var(--border-width) solid var(--border-subtle);
     border-radius: var(--border-radius);
     padding: var(--spacing-lg);
     box-shadow: var(--shadow-sm);
@@ -241,36 +263,47 @@ select:focus {
    НАВИГАЦИЯ
    ============================================ */
 nav a {
-    color: var(--text-primary);
+    color: var(--on-surface);
     padding: 0.5rem 1rem;
     display: inline-block;
     transition: all 0.2s ease;
 }
 
 nav a:hover {
-    color: var(--color-primary);
-    background-color: var(--bg-secondary);
+    color: var(--brand);
+    background-color: var(--surface-2);
 }
 
 /* ============================================
    ТАБЛИЦЫ
    ============================================ */
+.table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: var(--border-radius);
+}
+
+.table-wrap table {
+    min-width: 640px;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
-    border: var(--border-width) solid var(--border-color);
+    border: var(--border-width) solid var(--border-subtle);
 }
 
 th, td {
     padding: 0.75rem;
     text-align: left;
-    border-bottom: var(--border-width) solid var(--border-color);
+    border-bottom: var(--border-width) solid var(--border-subtle);
 }
 
 th {
-    background-color: var(--bg-secondary);
+    background-color: var(--surface-2);
     font-weight: 600;
-    color: var(--text-primary);
+    color: var(--on-surface);
 }
 
 /* ============================================
@@ -281,8 +314,8 @@ th {
     bottom: 20px;
     right: 20px;
     z-index: 1000;
-    background: var(--bg-primary);
-    border: var(--border-width) solid var(--border-color);
+    background: var(--surface-1);
+    border: var(--border-width) solid var(--border-subtle);
     border-radius: 0.5rem;
     padding: var(--spacing-md);
     box-shadow: var(--shadow-lg);
@@ -293,9 +326,9 @@ th {
     width: 100%;
     padding: 0.75rem 1rem;
     margin-bottom: 0.5rem;
-    background: var(--btn-primary-bg);
-    color: var(--btn-primary-color);
-    border: var(--border-width) solid var(--btn-primary-bg);
+    background: var(--brand);
+    color: var(--on-surface-inverse);
+    border: var(--border-width) solid var(--brand);
     border-radius: var(--border-radius);
     cursor: pointer;
     font-size: var(--font-size-sm);
@@ -309,8 +342,8 @@ th {
 }
 
 .style-switcher button:hover {
-    background: var(--btn-primary-hover-bg);
-    border-color: var(--btn-primary-hover-bg);
+    background: var(--brand-hover);
+    border-color: var(--brand-hover);
 }
 
 
@@ -318,23 +351,23 @@ th {
    УТИЛИТЫ
    ============================================ */
 .text-primary {
-    color: var(--text-primary);
+    color: var(--on-surface);
 }
 
 .text-secondary {
-    color: var(--text-secondary);
+    color: var(--on-surface-2);
 }
 
 .bg-primary {
-    background-color: var(--bg-primary);
+    background-color: var(--surface-1);
 }
 
 .bg-secondary {
-    background-color: var(--bg-secondary);
+    background-color: var(--surface-2);
 }
 
 .border-primary {
-    border-color: var(--color-primary);
+    border-color: var(--brand);
 }
 
 /* ============================================
@@ -352,8 +385,9 @@ th {
 }
 
 .hero-swiper .swiper-pagination-bullet {
-    background: white;
-    opacity: 0.5;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+    opacity: 0.65;
 }
 
 .hero-swiper .swiper-pagination-bullet-active {
@@ -376,7 +410,6 @@ th {
 
 /* ============================================
    МИНИМАЛЬНЫЙ НАБОР СТИЛЕЙ ДЛЯ СТАТЕЙ
-   Использовать только эти классы!
    ============================================ */
 
 /* 1. КОНТЕЙНЕРЫ */
@@ -386,31 +419,36 @@ th {
     padding: var(--spacing-lg);
 }
 
-h1, h2, h3, h4, h5, h6 {
-    font-weight: 700;
-    line-height: var(--line-height-tight);
-    margin-top: 0;
-    margin-bottom: 0.5em;
-    color: var(--text-primary);
-    letter-spacing: -0.02em;
+/* Заголовки внутри статей */
+.article-container h1,
+.article-container h2,
+.article-container h3,
+.article-container h4,
+.article-container h5,
+.article-container h6 {
+
 }
 
-h1 {
+.article-container h1 {
     font-size: var(--font-size-3xl);
 }
 
-h2 {
+.article-container h2 {
     font-size: var(--font-size-2xl);
 }
 
-h3 {
+.article-container h3 {
     font-size: var(--font-size-xl);
+}
+
+.article-container p {
+
 }
 
 .article-section {
     margin-bottom: var(--spacing-xl);
     padding-bottom: var(--spacing-lg);
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-subtle);
 }
 
 /* 2. ЗАГОЛОВКИ */
@@ -420,19 +458,19 @@ h3 {
 }
 
 .article-title {
-    color: var(--color-leather-dark);
+    color: var(--brand);
     font-size: var(--font-size-3xl);
     margin-bottom: var(--spacing-sm);
     line-height: 1.2;
 }
 
 .article-subtitle {
-    color: var(--color-leather-medium);
+    color: var(--brand-hover);
     font-size: var(--font-size-lg);
 }
 
 .section-title {
-    color: var(--color-leather-dark);
+    color: var(--brand);
     margin-bottom: var(--spacing-md);
     display: flex;
     align-items: center;
@@ -441,14 +479,14 @@ h3 {
 
 /* 3. ТЕКСТ */
 .article-intro {
-    background-color: var(--bg-secondary);
+    background-color: var(--surface-2);
     padding: var(--spacing-lg);
     border-radius: var(--border-radius);
     margin-bottom: var(--spacing-xl);
 }
 
 .highlight-text {
-    background-color: var(--color-leather-cream);
+    background-color: var(--surface-2);
     padding: 2px 6px;
     border-radius: 3px;
     font-weight: 600;
@@ -456,10 +494,10 @@ h3 {
 
 /* 4. КАРТОЧКИ */
 .article-card {
-    background-color: var(--bg-secondary);
+    background-color: var(--surface-2);
     padding: var(--spacing-md);
     border-radius: var(--border-radius);
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--border-subtle);
 }
 
 .card-grid {
@@ -483,7 +521,7 @@ h3 {
 
 .article-list li:before {
     content: "▸";
-    color: var(--color-leather-medium);
+    color: var(--brand-hover);
     font-weight: bold;
     position: absolute;
     left: -1.2em;
@@ -497,19 +535,19 @@ h3 {
 }
 
 .article-table th {
-    background-color: var(--bg-secondary);
+    background-color: var(--surface-2);
     padding: var(--spacing-md);
     text-align: left;
 }
 
 .article-table td {
     padding: var(--spacing-md);
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-subtle);
 }
 
 /* 7. ИТОГИ */
 .article-conclusion {
-    background-color: var(--color-leather-cream);
+    background-color: var(--surface-2);
     padding: var(--spacing-xl);
     border-radius: var(--border-radius);
     margin-top: var(--spacing-xl);
@@ -554,5 +592,12 @@ h3 {
     .btn {
         min-width: 100px;
         padding: 0.625rem 1rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+        scroll-behavior: auto !important;
     }
 }
