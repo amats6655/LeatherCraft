@@ -51,7 +51,7 @@
                             <button class="text-gray-700 hover:text-leather-dark transition-colors">
                                 <i class="fas fa-user"></i> {{ current_user.username }}
                             </button>
-                            <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
+                            <div class="absolute right-0 w-48 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
                                 <a href="{{ url_for('user.profile') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream">Профиль</a>
                                 <a href="{{ url_for('user.orders') }}" class="block px-4 py-2 text-gray-700 hover:bg-leather-cream">Мои заказы</a>
                                 {% if current_user.is_admin() or current_user.is_manager() %}
